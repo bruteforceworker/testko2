@@ -68,7 +68,7 @@ map<uint256, map<uint256, CDataStream*> > mapOrphanTransactionsByPrev;
 // Constant stuff for coinbase transactions we create:
 CScript COINBASE_FLAGS;
 
-const string strMessageMagic = "Basecoin Signed Message:\n";
+const string strMessageMagic = "Testnicoin Signed Message:\n";
 
 double dHashesPerSec;
 int64 nHPSTimerStart;
@@ -360,7 +360,7 @@ bool CTransaction::AreInputsStandard(const MapPrevTx& mapInputs) const
         {
             if (stack.empty())
                 return false;
-            CScript subscript(stack.back().begin(), stack.back().end());
+            CScript subscript(stack.tsck().begin(), stack.tsck().end());
             vector<vector<unsigned char> > vSolutions2;
             txnouttype whichType2;
             if (!Solver(subscript, whichType2, vSolutions2))
@@ -741,7 +741,7 @@ void CTxMemPool::queryHashes(std::vector<uint256>& vtxid)
     LOCK(cs);
     vtxid.reserve(mapTx.size());
     for (map<uint256, CTransaction>::iterator mi = mapTx.begin(); mi != mapTx.end(); ++mi)
-        vtxid.push_back((*mi).first);
+        vtxid.push_tsck((*mi).first);
 }
 
 
@@ -915,7 +915,7 @@ bool CBlock::ReadFromDisk(const CBlockIndex* pindex, bool fReadTransactions)
 
 uint256 static GetOrphanRoot(const CBlock* pblock)
 {
-    // Work back to the first block in the orphan chain
+    // Work tsck to the first block in the orphan chain
     while (mapOrphanBlocks.count(pblock->hashPrevBlock))
         pblock = mapOrphanBlocks[pblock->hashPrevBlock];
     return pblock->GetHash();
@@ -925,7 +925,7 @@ uint256 static GetOrphanRoot(const CBlock* pblock)
 // ppcoin: find block wanted by given orphan block
 uint256 WantedByOrphan(const CBlock* pblockOrphan)
 {
-    // Work back to the first block in the orphan chain
+    // Work tsck to the first block in the orphan chain
     while (mapOrphanBlocks.count(pblockOrphan->hashPrevBlock))
         pblockOrphan = mapOrphanBlocks[pblockOrphan->hashPrevBlock];
     return pblockOrphan->hashPrevBlock;
@@ -1118,7 +1118,7 @@ bool CTransaction::DisconnectInputs(CTxDB& txdb)
             // Mark outpoint as not spent
             txindex.vSpent[prevout.n].SetNull();
 
-            // Write back
+            // Write tsck
             if (!txdb.UpdateTxIndex(prevout.hash, txindex))
                 return error("DisconnectInputs() : UpdateTxIndex failed");
         }
@@ -1329,7 +1329,7 @@ bool CTransaction::ConnectInputs(CTxDB& txdb, MapPrevTx inputs,
             // Mark outpoints as spent
             txindex.vSpent[prevout.n] = posThisTx;
 
-            // Write back
+            // Write tsck
             if (fBlock || fMiner)
             {
                 mapTestPool[prevout.hash] = txindex;
@@ -1461,8 +1461,8 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
     // Now that the whole chain is irreversibly beyond that time it is applied to all blocks except the
     // two in the chain that violate it. This prevents exploiting the issue against nodes in their
     // initial block download.
-    bool fEnforceBIP30 = true; // Always active in Basecoin
-    bool fStrictPayToScriptHash = true; // Always active in Basecoin
+    bool fEnforceBIP30 = true; // Always active in Testnicoin
+    bool fStrictPayToScriptHash = true; // Always active in Testnicoin
 
     //// issue here: it doesn't know the version
     unsigned int nTxPos;
@@ -1613,12 +1613,12 @@ bool static Reorganize(CTxDB& txdb, CBlockIndex* pindexNew)
     // List of what to disconnect
     vector<CBlockIndex*> vDisconnect;
     for (CBlockIndex* pindex = pindexBest; pindex != pfork; pindex = pindex->pprev)
-        vDisconnect.push_back(pindex);
+        vDisconnect.push_tsck(pindex);
 
     // List of what to connect
     vector<CBlockIndex*> vConnect;
     for (CBlockIndex* pindex = pindexNew; pindex != pfork; pindex = pindex->pprev)
-        vConnect.push_back(pindex);
+        vConnect.push_tsck(pindex);
     reverse(vConnect.begin(), vConnect.end());
 
     printf("REORGANIZE: Disconnect %"PRIszu" blocks; %s..%s\n", vDisconnect.size(), pfork->GetBlockHash().ToString().substr(0,20).c_str(), pindexBest->GetBlockHash().ToString().substr(0,20).c_str());
@@ -1637,7 +1637,7 @@ bool static Reorganize(CTxDB& txdb, CBlockIndex* pindexNew)
         // Queue memory transactions to resurrect
         BOOST_FOREACH(const CTransaction& tx, block.vtx)
             if (!(tx.IsCoinBase() || tx.IsCoinStake()))
-                vResurrect.push_back(tx);
+                vResurrect.push_tsck(tx);
     }
 
     // Connect longer branch
@@ -1656,7 +1656,7 @@ bool static Reorganize(CTxDB& txdb, CBlockIndex* pindexNew)
 
         // Queue memory transactions to delete
         BOOST_FOREACH(const CTransaction& tx, block.vtx)
-            vDelete.push_back(tx);
+            vDelete.push_tsck(tx);
     }
     if (!txdb.WriteHashBestChain(pindexNew->GetBlockHash()))
         return error("Reorganize() : WriteHashBestChain failed");
@@ -1747,7 +1747,7 @@ bool CBlock::SetBestChain(CTxDB& txdb, CBlockIndex* pindexNew)
         // Try to limit how much needs to be done inside
         while (pindexIntermediate->pprev && pindexIntermediate->pprev->bnChainTrust > pindexBest->bnChainTrust)
         {
-            vpindexSecondary.push_back(pindexIntermediate);
+            vpindexSecondary.push_tsck(pindexIntermediate);
             pindexIntermediate = pindexIntermediate->pprev;
         }
 
@@ -2241,7 +2241,7 @@ bool ProcessBlock(CNode* pfrom, CBlock* pblock)
 
     // Recursively process any orphan blocks that depended on this one
     vector<uint256> vWorkQueue;
-    vWorkQueue.push_back(hash);
+    vWorkQueue.push_tsck(hash);
     for (unsigned int i = 0; i < vWorkQueue.size(); i++)
     {
         uint256 hashPrev = vWorkQueue[i];
@@ -2251,7 +2251,7 @@ bool ProcessBlock(CNode* pfrom, CBlock* pblock)
         {
             CBlock* pblockOrphan = (*mi).second;
             if (pblockOrphan->AcceptBlock())
-                vWorkQueue.push_back(pblockOrphan->GetHash());
+                vWorkQueue.push_tsck(pblockOrphan->GetHash());
             mapOrphanBlocks.erase(pblockOrphan->GetHash());
             setStakeSeenOrphan.erase(pblockOrphan->GetProofOfStake());
             delete pblockOrphan;
@@ -2392,7 +2392,7 @@ bool CheckDiskSpace(uint64 nAdditionalBytes)
         string strMessage = _("Warning: Disk space is low!");
         strMiscWarning = strMessage;
         printf("*** %s\n", strMessage.c_str());
-        uiInterface.ThreadSafeMessageBox(strMessage, "Basecoin", CClientUIInterface::OK | CClientUIInterface::ICON_EXCLAMATION | CClientUIInterface::MODAL);
+        uiInterface.ThreadSafeMessageBox(strMessage, "Testnicoin", CClientUIInterface::OK | CClientUIInterface::ICON_EXCLAMATION | CClientUIInterface::MODAL);
         StartShutdown();
         return false;
     }
@@ -2485,7 +2485,7 @@ bool LoadBlockIndex(bool fAllowNew)
             return false;
 
         // Genesis block
-        const char* pszTimestamp = "BaseCoin - The coin build the world economy!";
+        const char* pszTimestamp = "TestniCoin - The coin build the world economy!";
         CTransaction txNew;
         txNew.nTime = nChainStartTime;
         txNew.vin.resize(1);
@@ -2495,11 +2495,11 @@ bool LoadBlockIndex(bool fAllowNew)
         txNew.strTxComment = "";
 
         CBlock block;
-        block.vtx.push_back(txNew);
+        block.vtx.push_tsck(txNew);
         block.hashPrevBlock = 0;
         block.hashMerkleRoot = block.BuildMerkleTree();
         block.nVersion = 1;
-        block.nTime    = 1374911200;
+        block.nTime    = 1408809591;
         block.nBits    = bnProofOfWorkLimit.GetCompact();
         block.nNonce   = 34570663;
 
@@ -2579,21 +2579,21 @@ void PrintBlockTree()
     for (map<uint256, CBlockIndex*>::iterator mi = mapBlockIndex.begin(); mi != mapBlockIndex.end(); ++mi)
     {
         CBlockIndex* pindex = (*mi).second;
-        mapNext[pindex->pprev].push_back(pindex);
+        mapNext[pindex->pprev].push_tsck(pindex);
         // test
         //while (rand() % 3 == 0)
-        //    mapNext[pindex->pprev].push_back(pindex);
+        //    mapNext[pindex->pprev].push_tsck(pindex);
     }
 
     vector<pair<int, CBlockIndex*> > vStack;
-    vStack.push_back(make_pair(0, pindexGenesisBlock));
+    vStack.push_tsck(make_pair(0, pindexGenesisBlock));
 
     int nPrevCol = 0;
     while (!vStack.empty())
     {
-        int nCol = vStack.back().first;
-        CBlockIndex* pindex = vStack.back().second;
-        vStack.pop_back();
+        int nCol = vStack.tsck().first;
+        CBlockIndex* pindex = vStack.tsck().second;
+        vStack.pop_tsck();
 
         // print split or gap
         if (nCol > nPrevCol)
@@ -2642,7 +2642,7 @@ void PrintBlockTree()
 
         // iterate children
         for (unsigned int i = 0; i < vNext.size(); i++)
-            vStack.push_back(make_pair(nCol+i, vNext[i]));
+            vStack.push_tsck(make_pair(nCol+i, vNext[i]));
     }
 }
 
@@ -3035,7 +3035,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
             }
             // Do not store addresses outside our network
             if (fReachable)
-                vAddrOk.push_back(addr);
+                vAddrOk.push_tsck(addr);
         }
         addrman.Add(vAddrOk, pfrom->addr, 2 * 60 * 60);
         if (vAddr.size() < 1000)
@@ -3132,7 +3132,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
                         // download node to accept as orphan (proof-of-stake 
                         // block might be rejected by stake connection check)
                         vector<CInv> vInv;
-                        vInv.push_back(CInv(MSG_BLOCK, GetLastBlockIndex(pindexBest, false)->GetBlockHash()));
+                        vInv.push_tsck(CInv(MSG_BLOCK, GetLastBlockIndex(pindexBest, false)->GetBlockHash()));
                         pfrom->PushMessage("inv", vInv);
                         pfrom->hashContinue = 0;
                     }
@@ -3247,7 +3247,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
         printf("getheaders %d to %s\n", (pindex ? pindex->nHeight : -1), hashStop.ToString().substr(0,20).c_str());
         for (; pindex; pindex = pindex->pnext)
         {
-            vHeaders.push_back(pindex->GetBlockHeader());
+            vHeaders.push_tsck(pindex->GetBlockHeader());
             if (--nLimit <= 0 || pindex->GetBlockHash() == hashStop)
                 break;
         }
@@ -3273,8 +3273,8 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
             SyncWithWallets(tx, NULL, true);
             RelayMessage(inv, vMsg);
             mapAlreadyAskedFor.erase(inv);
-            vWorkQueue.push_back(inv.hash);
-            vEraseQueue.push_back(inv.hash);
+            vWorkQueue.push_tsck(inv.hash);
+            vEraseQueue.push_tsck(inv.hash);
 
             // Recursively process any orphan transactions that depended on this one
             for (unsigned int i = 0; i < vWorkQueue.size(); i++)
@@ -3296,13 +3296,13 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
                         SyncWithWallets(tx, NULL, true);
                         RelayMessage(inv, vMsg);
                         mapAlreadyAskedFor.erase(inv);
-                        vWorkQueue.push_back(inv.hash);
-                        vEraseQueue.push_back(inv.hash);
+                        vWorkQueue.push_tsck(inv.hash);
+                        vEraseQueue.push_tsck(inv.hash);
                     }
                     else if (!fMissingInputs2)
                     {
                         // invalid orphan
-                        vEraseQueue.push_back(inv.hash);
+                        vEraseQueue.push_tsck(inv.hash);
                         printf("   removed invalid orphan tx %s\n", inv.hash.ToString().substr(0,10).c_str());
                     }
                 }
@@ -3357,7 +3357,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
         vector<CInv> vInv;
         for (unsigned int i = 0; i < vtxid.size(); i++) {
             CInv inv(MSG_TX, vtxid[i]);
-            vInv.push_back(inv);
+            vInv.push_tsck(inv);
             if (i == (MAX_INV_SZ - 1))
                     break;
         }
@@ -3386,7 +3386,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
         if (!mapReuseKey.count(pfrom->addr))
             pwalletMain->GetKeyFromPool(mapReuseKey[pfrom->addr], true);
 
-        // Send back approval of order and pubkey to use
+        // Send tsck approval of order and pubkey to use
         CScript scriptPubKey;
         scriptPubKey << mapReuseKey[pfrom->addr] << OP_CHECKSIG;
         pfrom->PushMessage("reply", hashReply, (int)0, scriptPubKey);
@@ -3419,7 +3419,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
         {
             uint64 nonce = 0;
             vRecv >> nonce;
-            // Echo the message back with the nonce. This allows for two useful features:
+            // Echo the message tsck with the nonce. This allows for two useful features:
             //
             // 1) A remote node can quickly check if the connection is operational
             // 2) Remote nodes can measure the latency of the network thread. If this node
@@ -3660,7 +3660,7 @@ bool SendMessages(CNode* pto, bool fSendTrickle)
                 // returns true if wasn't already contained in the set
                 if (pto->setAddrKnown.insert(addr).second)
                 {
-                    vAddr.push_back(addr);
+                    vAddr.push_tsck(addr);
                     // receiver rejects addr messages larger than 1000
                     if (vAddr.size() >= 1000)
                     {
@@ -3711,7 +3711,7 @@ bool SendMessages(CNode* pto, bool fSendTrickle)
 
                     if (fTrickleWait)
                     {
-                        vInvWait.push_back(inv);
+                        vInvWait.push_tsck(inv);
                         continue;
                     }
                 }
@@ -3719,7 +3719,7 @@ bool SendMessages(CNode* pto, bool fSendTrickle)
                 // returns true if wasn't already contained in the set
                 if (pto->setInventoryKnown.insert(inv).second)
                 {
-                    vInv.push_back(inv);
+                    vInv.push_tsck(inv);
                     if (vInv.size() >= 1000)
                     {
                         pto->PushMessage("inv", vInv);
@@ -3746,7 +3746,7 @@ bool SendMessages(CNode* pto, bool fSendTrickle)
             {
                 if (fDebugNet)
                     printf("sending getdata: %s\n", inv.ToString().c_str());
-                vGetData.push_back(inv);
+                vGetData.push_tsck(inv);
                 if (vGetData.size() >= 1000)
                 {
                     pto->PushMessage("getdata", vGetData);
@@ -3880,7 +3880,7 @@ CBlock* CreateNewBlock(CWallet* pwallet, bool fProofOfStake)
     txNew.vout[0].scriptPubKey << reservekey.GetReservedKey() << OP_CHECKSIG;
 
     // Add our coinbase tx as first transaction
-    pblock->vtx.push_back(txNew);
+    pblock->vtx.push_tsck(txNew);
 
     // Largest block you're willing to create:
     unsigned int nBlockMaxSize = GetArg("-blockmaxsize", MAX_BLOCK_SIZE_GEN/2);
@@ -3924,7 +3924,7 @@ CBlock* CreateNewBlock(CWallet* pwallet, bool fProofOfStake)
                     // as it would be the same as the block timestamp
                     pblock->vtx[0].vout[0].SetEmpty();
                     pblock->vtx[0].nTime = txCoinStake.nTime;
-                    pblock->vtx.push_back(txCoinStake);
+                    pblock->vtx.push_tsck(txCoinStake);
 
                 }
             }
@@ -3975,7 +3975,7 @@ CBlock* CreateNewBlock(CWallet* pwallet, bool fProofOfStake)
                         if (fDebug) assert("mempool transaction missing input" == 0);
                         fMissingInputs = true;
                         if (porphan)
-                            vOrphan.pop_back();
+                            vOrphan.pop_tsck();
                         break;
                     }
 
@@ -3983,10 +3983,10 @@ CBlock* CreateNewBlock(CWallet* pwallet, bool fProofOfStake)
                     if (!porphan)
                     {
                         // Use list for automatic deletion
-                        vOrphan.push_back(COrphan(&tx));
-                        porphan = &vOrphan.back();
+                        vOrphan.push_tsck(COrphan(&tx));
+                        porphan = &vOrphan.tsck();
                     }
-                    mapDependers[txin.prevout.hash].push_back(porphan);
+                    mapDependers[txin.prevout.hash].push_tsck(porphan);
                     porphan->setDependsOn.insert(txin.prevout.hash);
                     nTotalIn += mempool.mapTx[txin.prevout.hash].vout[txin.prevout.n].nValue;
                     continue;
@@ -4014,7 +4014,7 @@ CBlock* CreateNewBlock(CWallet* pwallet, bool fProofOfStake)
                 porphan->dFeePerKb = dFeePerKb;
             }
             else
-                vecPriority.push_back(TxPriority(dPriority, dFeePerKb, &(*mi).second));
+                vecPriority.push_tsck(TxPriority(dPriority, dFeePerKb, &(*mi).second));
         }
 
         // Collect transactions into block
@@ -4035,7 +4035,7 @@ CBlock* CreateNewBlock(CWallet* pwallet, bool fProofOfStake)
             CTransaction& tx = *(vecPriority.front().get<2>());
 
             std::pop_heap(vecPriority.begin(), vecPriority.end(), comparer);
-            vecPriority.pop_back();
+            vecPriority.pop_tsck();
 
             // Size limits
             unsigned int nTxSize = ::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION);
@@ -4090,7 +4090,7 @@ CBlock* CreateNewBlock(CWallet* pwallet, bool fProofOfStake)
             swap(mapTestPool, mapTestPoolTmp);
 
             // Added
-            pblock->vtx.push_back(tx);
+            pblock->vtx.push_tsck(tx);
             nBlockSize += nTxSize;
             ++nBlockTx;
             nBlockSigOps += nTxSigOps;
@@ -4113,7 +4113,7 @@ CBlock* CreateNewBlock(CWallet* pwallet, bool fProofOfStake)
                         porphan->setDependsOn.erase(hash);
                         if (porphan->setDependsOn.empty())
                         {
-                            vecPriority.push_back(TxPriority(porphan->dPriority, porphan->dFeePerKb, porphan->ptx));
+                            vecPriority.push_tsck(TxPriority(porphan->dPriority, porphan->dFeePerKb, porphan->ptx));
                             std::push_heap(vecPriority.begin(), vecPriority.end(), comparer);
                         }
                     }

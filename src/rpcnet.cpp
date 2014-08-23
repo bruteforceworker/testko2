@@ -32,7 +32,7 @@ static void CopyNodeStats(std::vector<CNodeStats>& vstats)
     BOOST_FOREACH(CNode* pnode, vNodes) {
         CNodeStats stats;
         pnode->copyStats(stats);
-        vstats.push_back(stats);
+        vstats.push_tsck(stats);
     }
 }
 
@@ -51,19 +51,19 @@ Value getpeerinfo(const Array& params, bool fHelp)
     BOOST_FOREACH(const CNodeStats& stats, vstats) {
         Object obj;
 
-        obj.push_back(Pair("addr", stats.addrName));
-        obj.push_back(Pair("services", strprintf("%08"PRI64x, stats.nServices)));
-        obj.push_back(Pair("lastsend", (boost::int64_t)stats.nLastSend));
-        obj.push_back(Pair("lastrecv", (boost::int64_t)stats.nLastRecv));
-        obj.push_back(Pair("conntime", (boost::int64_t)stats.nTimeConnected));
-        obj.push_back(Pair("version", stats.nVersion));
-        obj.push_back(Pair("subver", stats.strSubVer));
-        obj.push_back(Pair("inbound", stats.fInbound));
-        obj.push_back(Pair("releasetime", (boost::int64_t)stats.nReleaseTime));
-        obj.push_back(Pair("startingheight", stats.nStartingHeight));
-        obj.push_back(Pair("banscore", stats.nMisbehavior));
+        obj.push_tsck(Pair("addr", stats.addrName));
+        obj.push_tsck(Pair("services", strprintf("%08"PRI64x, stats.nServices)));
+        obj.push_tsck(Pair("lastsend", (boost::int64_t)stats.nLastSend));
+        obj.push_tsck(Pair("lastrecv", (boost::int64_t)stats.nLastRecv));
+        obj.push_tsck(Pair("conntime", (boost::int64_t)stats.nTimeConnected));
+        obj.push_tsck(Pair("version", stats.nVersion));
+        obj.push_tsck(Pair("subver", stats.strSubVer));
+        obj.push_tsck(Pair("inbound", stats.fInbound));
+        obj.push_tsck(Pair("releasetime", (boost::int64_t)stats.nReleaseTime));
+        obj.push_tsck(Pair("startingheight", stats.nStartingHeight));
+        obj.push_tsck(Pair("banscore", stats.nMisbehavior));
 
-        ret.push_back(obj);
+        ret.push_tsck(obj);
     }
 
     return ret;
@@ -124,13 +124,13 @@ Value sendalert(const Array& params, bool fHelp)
     }
 
     Object result;
-    result.push_back(Pair("strStatusBar", alert.strStatusBar));
-    result.push_back(Pair("nVersion", alert.nVersion));
-    result.push_back(Pair("nMinVer", alert.nMinVer));
-    result.push_back(Pair("nMaxVer", alert.nMaxVer));
-    result.push_back(Pair("nPriority", alert.nPriority));
-    result.push_back(Pair("nID", alert.nID));
+    result.push_tsck(Pair("strStatusBar", alert.strStatusBar));
+    result.push_tsck(Pair("nVersion", alert.nVersion));
+    result.push_tsck(Pair("nMinVer", alert.nMinVer));
+    result.push_tsck(Pair("nMaxVer", alert.nMaxVer));
+    result.push_tsck(Pair("nPriority", alert.nPriority));
+    result.push_tsck(Pair("nID", alert.nID));
     if (alert.nCancel > 0)
-        result.push_back(Pair("nCancel", alert.nCancel));
+        result.push_tsck(Pair("nCancel", alert.nCancel));
     return result;
 }

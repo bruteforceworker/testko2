@@ -27,7 +27,7 @@ class CWalletTx;
 extern unsigned int nWalletDBUpdated;
 
 void ThreadFlushWalletDB(void* parg);
-bool BackupWallet(const CWallet& wallet, const std::string& strDest);
+bool TsckupWallet(const CWallet& wallet, const std::string& strDest);
 
 
 class CDBEnv
@@ -54,7 +54,7 @@ public:
 
     /*
      * Verify that database file strFile is OK. If it is not,
-     * call the callback to try to recover.
+     * call the calltsck to try to recover.
      * This must be called BEFORE strFile is opened.
      * Returns true if strFile is OK.
      */

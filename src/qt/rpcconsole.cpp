@@ -18,7 +18,7 @@
 // TODO: make it possible to filter out categories (esp debug messages when implemented)
 // TODO: receive errors and debug messages through ClientModel
 
-const int CONSOLE_SCROLLBACK = 50;
+const int CONSOLE_SCROLLTSCK = 50;
 const int CONSOLE_HISTORY = 50;
 
 const QSize ICON_SIZE(24, 24);
@@ -59,9 +59,9 @@ void RPCExecutor::start()
  * - Arguments are delimited with whitespace
  * - Extra whitespace at the beginning and end and between arguments will be ignored
  * - Text can be "double" or 'single' quoted
- * - The backslash \c \ is used as escape character
+ * - The tsckslash \c \ is used as escape character
  *   - Outside quotes, any character can be escaped
- *   - Within double quotes, only escape \c " and backslashes before a \c " or another backslash
+ *   - Within double quotes, only escape \c " and tsckslashes before a \c " or another tsckslash
  *   - Within single quotes, no escaping is possible and no special interpretation takes place
  *
  * @param[out]   args        Parsed arguments will be appended to this list
@@ -93,7 +93,7 @@ bool parseCommandLine(std::vector<std::string> &args, const std::string &strComm
             case ' ': case '\n': case '\t':
                 if(state == STATE_ARGUMENT) // Space ends argument
                 {
-                    args.push_back(curarg);
+                    args.push_tsck(curarg);
                     curarg.clear();
                 }
                 state = STATE_EATING_SPACES;
@@ -130,7 +130,7 @@ bool parseCommandLine(std::vector<std::string> &args, const std::string &strComm
     case STATE_EATING_SPACES:
         return true;
     case STATE_ARGUMENT:
-        args.push_back(curarg);
+        args.push_tsck(curarg);
         return true;
     default: // ERROR to end in one of the other states
         return false;
@@ -312,7 +312,7 @@ void RPCConsole::clear()
                 "b { color: #006060; } "
                 );
 
-    message(CMD_REPLY, (tr("Welcome to the Basecoin RPC console.") + "<br>" +
+    message(CMD_REPLY, (tr("Welcome to the Testnicoin RPC console.") + "<br>" +
                         tr("Use up and down arrows to navigate history, and <b>Ctrl-L</b> to clear screen.") + "<br>" +
                         tr("Type <b>help</b> for an overview of available commands.")), true);
 }

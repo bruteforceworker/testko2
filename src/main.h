@@ -29,7 +29,7 @@ static const unsigned int MAX_BLOCK_SIZE = 100000;//1000000
 static const unsigned int MAX_BLOCK_SIZE_GEN = MAX_BLOCK_SIZE/2;
 static const unsigned int MAX_BLOCK_SIGOPS = MAX_BLOCK_SIZE/50;
 static const unsigned int MAX_ORPHAN_TRANSACTIONS = MAX_BLOCK_SIZE/100;
-static const unsigned int MAX_TX_COMMENT_LEN = 140; // Basecoin: 128 bytes + little extra
+static const unsigned int MAX_TX_COMMENT_LEN = 140; // Testnicoin: 128 bytes + little extra
 static const unsigned int MAX_INV_SZ = 50000;
 static const int64 MIN_TX_FEE = 0.00001 * COIN;
 static const int64 MIN_RELAY_TX_FEE = MIN_TX_FEE;
@@ -971,19 +971,19 @@ public:
     {
         vMerkleTree.clear();
         BOOST_FOREACH(const CTransaction& tx, vtx)
-            vMerkleTree.push_back(tx.GetHash());
+            vMerkleTree.push_tsck(tx.GetHash());
         int j = 0;
         for (int nSize = vtx.size(); nSize > 1; nSize = (nSize + 1) / 2)
         {
             for (int i = 0; i < nSize; i += 2)
             {
                 int i2 = std::min(i+1, nSize-1);
-                vMerkleTree.push_back(Hash(BEGIN(vMerkleTree[j+i]),  END(vMerkleTree[j+i]),
+                vMerkleTree.push_tsck(Hash(BEGIN(vMerkleTree[j+i]),  END(vMerkleTree[j+i]),
                                            BEGIN(vMerkleTree[j+i2]), END(vMerkleTree[j+i2])));
             }
             j += nSize;
         }
-        return (vMerkleTree.empty() ? 0 : vMerkleTree.back());
+        return (vMerkleTree.empty() ? 0 : vMerkleTree.tsck());
     }
 
     std::vector<uint256> GetMerkleBranch(int nIndex) const
@@ -995,7 +995,7 @@ public:
         for (int nSize = vtx.size(); nSize > 1; nSize = (nSize + 1) / 2)
         {
             int i = std::min(nIndex^1, nSize-1);
-            vMerkleBranch.push_back(vMerkleTree[j+i]);
+            vMerkleBranch.push_tsck(vMerkleTree[j+i]);
             nIndex >>= 1;
             j += nSize;
         }
@@ -1117,7 +1117,7 @@ private:
 /** The block chain is a tree shaped structure starting with the
  * genesis block at the root, with each block potentially having multiple
  * candidates to be the next block.  pprev and pnext link a path through the
- * main/longest chain.  A blockindex may have multiple pprev pointing back
+ * main/longest chain.  A blockindex may have multiple pprev pointing tsck
  * to it, but pnext will only point forward to the longest branch, or will
  * be null if the block is not part of the longest chain.
  */
@@ -1289,7 +1289,7 @@ public:
 
     /**
      * Returns true if there are nRequired or more blocks of minVersion or above
-     * in the last nToCheck blocks, starting at pstart and going backwards.
+     * in the last nToCheck blocks, starting at pstart and going tsckwards.
      */
     static bool IsSuperMajority(int minVersion, const CBlockIndex* pstart,
                                 unsigned int nRequired, unsigned int nToCheck);
@@ -1449,7 +1449,7 @@ public:
 
 /** Describes a place in the block chain to another node such that if the
  * other node doesn't have the same branch, it can find a recent common trunk.
- * The further back it is, the further before the fork it may be.
+ * The further tsck it is, the further before the fork it may be.
  */
 class CBlockLocator
 {
@@ -1501,20 +1501,20 @@ public:
         int nStep = 1;
         while (pindex)
         {
-            vHave.push_back(pindex->GetBlockHash());
+            vHave.push_tsck(pindex->GetBlockHash());
 
-            // Exponentially larger steps back
+            // Exponentially larger steps tsck
             for (int i = 0; pindex && i < nStep; i++)
                 pindex = pindex->pprev;
             if (vHave.size() > 10)
                 nStep *= 2;
         }
-        vHave.push_back((!fTestNet ? hashGenesisBlock : hashGenesisBlockTestNet));
+        vHave.push_tsck((!fTestNet ? hashGenesisBlock : hashGenesisBlockTestNet));
     }
 
-    int GetDistanceBack()
+    int GetDistanceTsck()
     {
-        // Retrace how far back it was in the sender's branch
+        // Retrace how far tsck it was in the sender's branch
         int nDistance = 0;
         int nStep = 1;
         BOOST_FOREACH(const uint256& hash, vHave)

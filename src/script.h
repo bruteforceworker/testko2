@@ -239,7 +239,7 @@ protected:
     {
         if (n == -1 || (n >= 1 && n <= 16))
         {
-            push_back(n + (OP_1 - 1));
+            push_tsck(n + (OP_1 - 1));
         }
         else
         {
@@ -253,7 +253,7 @@ protected:
     {
         if (n >= 1 && n <= 16)
         {
-            push_back(n + (OP_1 - 1));
+            push_tsck(n + (OP_1 - 1));
         }
         else
         {

@@ -46,30 +46,30 @@ double GetDifficulty(const CBlockIndex* blockindex)
 Object blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool fPrintTransactionDetail)
 {
     Object result;
-    result.push_back(Pair("hash", block.GetHash().GetHex()));
+    result.push_tsck(Pair("hash", block.GetHash().GetHex()));
     CMerkleTx txGen(block.vtx[0]);
     txGen.SetMerkleBranch(&block);
-    result.push_back(Pair("confirmations", (int)txGen.GetDepthInMainChain()));
-    result.push_back(Pair("size", (int)::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION)));
-    result.push_back(Pair("height", blockindex->nHeight));
-    result.push_back(Pair("version", block.nVersion));
-    result.push_back(Pair("merkleroot", block.hashMerkleRoot.GetHex()));
-    result.push_back(Pair("mint", ValueFromAmount(blockindex->nMint)));
-    result.push_back(Pair("time", (boost::int64_t)block.GetBlockTime()));
-    result.push_back(Pair("nonce", (boost::uint64_t)block.nNonce));
-    result.push_back(Pair("bits", HexBits(block.nBits)));
-    result.push_back(Pair("difficulty", GetDifficulty(blockindex)));
+    result.push_tsck(Pair("confirmations", (int)txGen.GetDepthInMainChain()));
+    result.push_tsck(Pair("size", (int)::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION)));
+    result.push_tsck(Pair("height", blockindex->nHeight));
+    result.push_tsck(Pair("version", block.nVersion));
+    result.push_tsck(Pair("merkleroot", block.hashMerkleRoot.GetHex()));
+    result.push_tsck(Pair("mint", ValueFromAmount(blockindex->nMint)));
+    result.push_tsck(Pair("time", (boost::int64_t)block.GetBlockTime()));
+    result.push_tsck(Pair("nonce", (boost::uint64_t)block.nNonce));
+    result.push_tsck(Pair("bits", HexBits(block.nBits)));
+    result.push_tsck(Pair("difficulty", GetDifficulty(blockindex)));
 
     if (blockindex->pprev)
-        result.push_back(Pair("previousblockhash", blockindex->pprev->GetBlockHash().GetHex()));
+        result.push_tsck(Pair("previousblockhash", blockindex->pprev->GetBlockHash().GetHex()));
     if (blockindex->pnext)
-        result.push_back(Pair("nextblockhash", blockindex->pnext->GetBlockHash().GetHex()));
+        result.push_tsck(Pair("nextblockhash", blockindex->pnext->GetBlockHash().GetHex()));
 
-    result.push_back(Pair("flags", strprintf("%s%s", blockindex->IsProofOfStake()? "proof-of-stake" : "proof-of-work", blockindex->GeneratedStakeModifier()? " stake-modifier": "")));
-    result.push_back(Pair("proofhash", blockindex->IsProofOfStake()? blockindex->hashProofOfStake.GetHex() : blockindex->GetBlockHash().GetHex()));
-    result.push_back(Pair("entropybit", (int)blockindex->GetStakeEntropyBit()));
-    result.push_back(Pair("modifier", strprintf("%016"PRI64x, blockindex->nStakeModifier)));
-    result.push_back(Pair("modifierchecksum", strprintf("%08x", blockindex->nStakeModifierChecksum)));
+    result.push_tsck(Pair("flags", strprintf("%s%s", blockindex->IsProofOfStake()? "proof-of-stake" : "proof-of-work", blockindex->GeneratedStakeModifier()? " stake-modifier": "")));
+    result.push_tsck(Pair("proofhash", blockindex->IsProofOfStake()? blockindex->hashProofOfStake.GetHex() : blockindex->GetBlockHash().GetHex()));
+    result.push_tsck(Pair("entropybit", (int)blockindex->GetStakeEntropyBit()));
+    result.push_tsck(Pair("modifier", strprintf("%016"PRI64x, blockindex->nStakeModifier)));
+    result.push_tsck(Pair("modifierchecksum", strprintf("%08x", blockindex->nStakeModifierChecksum)));
     Array txinfo;
     BOOST_FOREACH (const CTransaction& tx, block.vtx)
     {
@@ -77,17 +77,17 @@ Object blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool fPri
         {
             Object entry;
 
-            entry.push_back(Pair("txid", tx.GetHash().GetHex()));
+            entry.push_tsck(Pair("txid", tx.GetHash().GetHex()));
             TxToJSON(tx, 0, entry);
 
-            txinfo.push_back(entry);
+            txinfo.push_tsck(entry);
         }
         else
-            txinfo.push_back(tx.GetHash().GetHex());
+            txinfo.push_tsck(tx.GetHash().GetHex());
     }
 
-    result.push_back(Pair("tx", txinfo));
-    result.push_back(Pair("signature", HexStr(block.vchBlockSig.begin(), block.vchBlockSig.end())));
+    result.push_tsck(Pair("tx", txinfo));
+    result.push_tsck(Pair("signature", HexStr(block.vchBlockSig.begin(), block.vchBlockSig.end())));
 
     return result;
 }
@@ -112,9 +112,9 @@ Value getdifficulty(const Array& params, bool fHelp)
             "Returns the difficulty as a multiple of the minimum difficulty.");
 
     Object obj;
-    obj.push_back(Pair("proof-of-work",        GetDifficulty()));
-    obj.push_back(Pair("proof-of-stake",       GetDifficulty(GetLastBlockIndex(pindexBest, true))));
-    obj.push_back(Pair("search-interval",      (int)nLastCoinStakeSearchInterval));
+    obj.push_tsck(Pair("proof-of-work",        GetDifficulty()));
+    obj.push_tsck(Pair("proof-of-stake",       GetDifficulty(GetLastBlockIndex(pindexBest, true))));
+    obj.push_tsck(Pair("search-interval",      (int)nLastCoinStakeSearchInterval));
     return obj;
 }
 
@@ -144,7 +144,7 @@ Value getrawmempool(const Array& params, bool fHelp)
 
     Array a;
     BOOST_FOREACH(const uint256& hash, vtxid)
-        a.push_back(hash.ToString());
+        a.push_tsck(hash.ToString());
 
     return a;
 }
@@ -221,12 +221,12 @@ Value getcheckpoint(const Array& params, bool fHelp)
     Object result;
     CBlockIndex* pindexCheckpoint;
 
-    result.push_back(Pair("synccheckpoint", Checkpoints::hashSyncCheckpoint.ToString().c_str()));
+    result.push_tsck(Pair("synccheckpoint", Checkpoints::hashSyncCheckpoint.ToString().c_str()));
     pindexCheckpoint = mapBlockIndex[Checkpoints::hashSyncCheckpoint];        
-    result.push_back(Pair("height", pindexCheckpoint->nHeight));
-    result.push_back(Pair("timestamp", DateTimeStrFormat(pindexCheckpoint->GetBlockTime()).c_str()));
+    result.push_tsck(Pair("height", pindexCheckpoint->nHeight));
+    result.push_tsck(Pair("timestamp", DateTimeStrFormat(pindexCheckpoint->GetBlockTime()).c_str()));
     if (mapArgs.count("-checkpointkey"))
-        result.push_back(Pair("checkpointmaster", true));
+        result.push_tsck(Pair("checkpointmaster", true));
 
     return result;
 }

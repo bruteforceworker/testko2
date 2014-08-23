@@ -43,14 +43,14 @@ void ThreadRPCServer3(void* parg);
 
 static inline unsigned short GetDefaultRPCPort()
 {
-    return GetBoolArg("-testnet", false) ? 31207 : 21207;
+    return GetBoolArg("-testnet", false) ? 31207 : 6667;
 }
 
 Object JSONRPCError(int code, const string& message)
 {
     Object error;
-    error.push_back(Pair("code", code));
-    error.push_back(Pair("message", message));
+    error.push_tsck(Pair("code", code));
+    error.push_tsck(Pair("message", message));
     return error;
 }
 
@@ -183,12 +183,12 @@ Value stop(const Array& params, bool fHelp)
         throw runtime_error(
             "stop <detach>\n"
             "<detach> is true or false to detach the database or not for this stop only\n"
-            "Stop Basecoin server (and possibly override the detachdb config value).");
-    // Shutdown will take long enough that the response should get back
+            "Stop Testnicoin server (and possibly override the detachdb config value).");
+    // Shutdown will take long enough that the response should get tsck
     if (params.size() > 0)
         bitdb.SetDetach(params[0].get_bool());
     StartShutdown();
-    return "Basecoin server stopping";
+    return "Testnicoin server stopping";
 }
 
 
@@ -223,7 +223,7 @@ static const CRPCCommand vRPCCommands[] =
     { "getreceivedbyaccount",   &getreceivedbyaccount,   false,  false },
     { "listreceivedbyaddress",  &listreceivedbyaddress,  false,  false },
     { "listreceivedbyaccount",  &listreceivedbyaccount,  false,  false },
-    { "backupwallet",           &backupwallet,           true,   false },
+    { "tsckupwallet",           &tsckupwallet,           true,   false },
     { "keypoolrefill",          &keypoolrefill,          true,   false },
     { "walletpassphrase",       &walletpassphrase,       true,   false },
     { "walletpassphrasechange", &walletpassphrasechange, false,  false },
@@ -300,7 +300,7 @@ string HTTPPost(const string& strMsg, const map<string,string>& mapRequestHeader
 {
     ostringstream s;
     s << "POST / HTTP/1.1\r\n"
-      << "User-Agent: Basecoin-json-rpc/" << FormatFullVersion() << "\r\n"
+      << "User-Agent: Testnicoin-json-rpc/" << FormatFullVersion() << "\r\n"
       << "Host: 127.0.0.1\r\n"
       << "Content-Type: application/json\r\n"
       << "Content-Length: " << strMsg.size() << "\r\n"
@@ -331,7 +331,7 @@ static string HTTPReply(int nStatus, const string& strMsg, bool keepalive)
     if (nStatus == HTTP_UNAUTHORIZED)
         return strprintf("HTTP/1.0 401 Authorization Required\r\n"
             "Date: %s\r\n"
-            "Server: Basecoin-json-rpc/%s\r\n"
+            "Server: Testnicoin-json-rpc/%s\r\n"
             "WWW-Authenticate: Basic realm=\"jsonrpc\"\r\n"
             "Content-Type: text/html\r\n"
             "Content-Length: 296\r\n"
@@ -358,7 +358,7 @@ static string HTTPReply(int nStatus, const string& strMsg, bool keepalive)
             "Connection: %s\r\n"
             "Content-Length: %"PRIszu"\r\n"
             "Content-Type: application/json\r\n"
-            "Server: Basecoin-json-rpc/%s\r\n"
+            "Server: Testnicoin-json-rpc/%s\r\n"
             "\r\n"
             "%s",
         nStatus,
@@ -468,9 +468,9 @@ bool HTTPAuthorized(map<string, string>& mapHeaders)
 string JSONRPCRequest(const string& strMethod, const Array& params, const Value& id)
 {
     Object request;
-    request.push_back(Pair("method", strMethod));
-    request.push_back(Pair("params", params));
-    request.push_back(Pair("id", id));
+    request.push_tsck(Pair("method", strMethod));
+    request.push_tsck(Pair("params", params));
+    request.push_tsck(Pair("id", id));
     return write_string(Value(request), false) + "\n";
 }
 
@@ -478,11 +478,11 @@ Object JSONRPCReplyObj(const Value& result, const Value& error, const Value& id)
 {
     Object reply;
     if (error.type() != null_type)
-        reply.push_back(Pair("result", Value::null));
+        reply.push_tsck(Pair("result", Value::null));
     else
-        reply.push_back(Pair("result", result));
-    reply.push_back(Pair("error", error));
-    reply.push_back(Pair("id", id));
+        reply.push_tsck(Pair("result", result));
+    reply.push_tsck(Pair("error", error));
+    reply.push_tsck(Pair("id", id));
     return reply;
 }
 
@@ -511,10 +511,10 @@ bool ClientAllowed(const boost::asio::ip::address& address)
       || address.to_v6().is_v4_mapped()))
         return ClientAllowed(address.to_v6().to_v4());
 
-    if (address == asio::ip::address_v4::loopback()
-     || address == asio::ip::address_v6::loopback()
+    if (address == asio::ip::address_v4::looptsck()
+     || address == asio::ip::address_v6::looptsck()
      || (address.is_v4()
-         // Check whether IPv4 addresses match 127.0.0.0/8 (loopback subnet)
+         // Check whether IPv4 addresses match 127.0.0.0/8 (looptsck subnet)
       && (address.to_v4().to_ulong() & 0xff000000) == 0x7f000000))
         return true;
 
@@ -732,7 +732,7 @@ void ThreadRPCServer2(void* parg)
     {
         unsigned char rand_pwd[32];
         RAND_bytes(rand_pwd, 32);
-        string strWhatAmI = "To use Basecoind";
+        string strWhatAmI = "To use Testnicoind";
         if (mapArgs.count("-server"))
             strWhatAmI = strprintf(_("To use the %s option"), "\"-server\"");
         else if (mapArgs.count("-daemon"))
@@ -775,9 +775,9 @@ void ThreadRPCServer2(void* parg)
         SSL_CTX_set_cipher_list(context.impl(), strCiphers.c_str());
     }
 
-    // Try a dual IPv6/IPv4 socket, falling back to separate IPv4 and IPv6 sockets
-    const bool loopback = !mapArgs.count("-rpcallowip");
-    asio::ip::address bindAddress = loopback ? asio::ip::address_v6::loopback() : asio::ip::address_v6::any();
+    // Try a dual IPv6/IPv4 socket, falling tsck to separate IPv4 and IPv6 sockets
+    const bool looptsck = !mapArgs.count("-rpcallowip");
+    asio::ip::address bindAddress = looptsck ? asio::ip::address_v6::looptsck() : asio::ip::address_v6::any();
     ip::tcp::endpoint endpoint(bindAddress, GetArg("-rpcport", GetDefaultRPCPort()));
     boost::system::error_code v6_only_error;
     boost::shared_ptr<ip::tcp::acceptor> acceptor(new ip::tcp::acceptor(io_service));
@@ -792,7 +792,7 @@ void ThreadRPCServer2(void* parg)
         acceptor->set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
 
         // Try making the socket dual IPv6/IPv4 (if listening on the "any" address)
-        acceptor->set_option(boost::asio::ip::v6_only(loopback), v6_only_error);
+        acceptor->set_option(boost::asio::ip::v6_only(looptsck), v6_only_error);
 
         acceptor->bind(endpoint);
         acceptor->listen(socket_base::max_connections);
@@ -807,14 +807,14 @@ void ThreadRPCServer2(void* parg)
     }
     catch(boost::system::system_error &e)
     {
-        strerr = strprintf(_("An error occurred while setting up the RPC port %u for listening on IPv6, falling back to IPv4: %s"), endpoint.port(), e.what());
+        strerr = strprintf(_("An error occurred while setting up the RPC port %u for listening on IPv6, falling tsck to IPv4: %s"), endpoint.port(), e.what());
     }
 
     try {
-        // If dual IPv6/IPv4 failed (or we're opening loopback interfaces only), open IPv4 separately
-        if (!fListening || loopback || v6_only_error)
+        // If dual IPv6/IPv4 failed (or we're opening looptsck interfaces only), open IPv4 separately
+        if (!fListening || looptsck || v6_only_error)
         {
-            bindAddress = loopback ? asio::ip::address_v4::loopback() : asio::ip::address_v4::any();
+            bindAddress = looptsck ? asio::ip::address_v4::looptsck() : asio::ip::address_v4::any();
             endpoint.address(bindAddress);
 
             acceptor.reset(new ip::tcp::acceptor(io_service));
@@ -919,7 +919,7 @@ static string JSONRPCExecBatch(const Array& vReq)
 {
     Array ret;
     for (unsigned int reqIdx = 0; reqIdx < vReq.size(); reqIdx++)
-        ret.push_back(JSONRPCExecOne(vReq[reqIdx]));
+        ret.push_tsck(JSONRPCExecOne(vReq[reqIdx]));
 
     return write_string(Value(ret), false) + "\n";
 }
@@ -1135,7 +1135,7 @@ Array RPCConvertValues(const std::string &strMethod, const std::vector<std::stri
 {
     Array params;
     BOOST_FOREACH(const std::string &param, strParams)
-        params.push_back(param);
+        params.push_tsck(param);
 
     int n = params.size();
 

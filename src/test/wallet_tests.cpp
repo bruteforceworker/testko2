@@ -37,7 +37,7 @@ static void add_coin(int64 nValue, int nAge = 6*24, bool fIsFromMe = false, int 
         wtx->nDebitCached = 1;
     }
     COutput output(wtx, nInput, nAge);
-    vCoins.push_back(output);
+    vCoins.push_tsck(output);
 }
 
 static void empty_wallet(void)

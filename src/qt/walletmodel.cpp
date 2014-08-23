@@ -6,7 +6,7 @@
 
 #include "ui_interface.h"
 #include "wallet.h"
-#include "walletdb.h" // for BackupWallet
+#include "walletdb.h" // for TsckupWallet
 #include "base58.h"
 
 #include <QSet>
@@ -180,7 +180,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(const QString &txcomment, co
         {
             CScript scriptPubKey;
             scriptPubKey.SetDestination(CBitcoinAddress(rcp.address.toStdString()).Get());
-            vecSend.push_back(make_pair(scriptPubKey, rcp.amount));
+            vecSend.push_tsck(make_pair(scriptPubKey, rcp.amount));
         }
 
         CWalletTx wtx;
@@ -302,9 +302,9 @@ bool WalletModel::changePassphrase(const SecureString &oldPass, const SecureStri
     return retval;
 }
 
-bool WalletModel::backupWallet(const QString &filename)
+bool WalletModel::tsckupWallet(const QString &filename)
 {
-    return BackupWallet(*wallet, filename.toLocal8Bit().data());
+    return TsckupWallet(*wallet, filename.toLocal8Bit().data());
 }
 
 // Handlers for core signals

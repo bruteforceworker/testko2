@@ -50,7 +50,7 @@ public:
         ICON_ASTERISK         = ICON_INFORMATION,
         ICON_MASK             = (0x00000100|0x00000200|0x00000400|0x00000800),
         FORWARD               = 0x00001000,
-        BACKWARD              = 0x00002000,
+        TSCKWARD              = 0x00002000,
         RESET                 = 0x00004000,
         HELP                  = 0x00008000,
         MORE                  = 0x00010000,

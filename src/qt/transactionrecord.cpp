@@ -105,7 +105,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 if(wallet->IsMine(txout))
                 {
                     // Ignore parts sent to self, as this is usually the change
-                    // from a transaction sent back to our own address.
+                    // from a transaction sent tsck to our own address.
                     continue;
                 }
 

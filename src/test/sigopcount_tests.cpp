@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE(GetSigOpCount)
     {
         CKey k;
         k.MakeNewKey(true);
-        keys.push_back(k);
+        keys.push_tsck(k);
     }
     CScript s2;
     s2.SetMultisig(1, keys);

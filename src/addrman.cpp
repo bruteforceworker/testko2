@@ -96,7 +96,7 @@ CAddrInfo* CAddrMan::Create(const CAddress &addr, const CNetAddr &addrSource, in
     mapInfo[nId] = CAddrInfo(addr, addrSource);
     mapAddr[addr] = nId;
     mapInfo[nId].nRandomPos = vRandom.size();
-    vRandom.push_back(nId);
+    vRandom.push_tsck(nId);
     if (pnId)
         *pnId = nId;
     return &mapInfo[nId];
@@ -161,7 +161,7 @@ int CAddrMan::ShrinkNew(int nUBucket)
             if (--info.nRefCount == 0)
             {
                 SwapRandom(info.nRandomPos, vRandom.size()-1);
-                vRandom.pop_back();
+                vRandom.pop_tsck();
                 mapAddr.erase(info);
                 mapInfo.erase(*it);
                 nNew--;
@@ -190,7 +190,7 @@ int CAddrMan::ShrinkNew(int nUBucket)
     if (--info.nRefCount == 0)
     {
         SwapRandom(info.nRandomPos, vRandom.size()-1);
-        vRandom.pop_back();
+        vRandom.pop_tsck();
         mapAddr.erase(info);
         mapInfo.erase(nOldest);
         nNew--;
@@ -221,7 +221,7 @@ void CAddrMan::MakeTried(CAddrInfo& info, int nId, int nOrigin)
     // first check whether there is place to just add it
     if (vTried.size() < ADDRMAN_TRIED_BUCKET_SIZE)
     {
-        vTried.push_back(nId);
+        vTried.push_tsck(nId);
         nTried++;
         info.fInTried = true;
         return;
@@ -244,7 +244,7 @@ void CAddrMan::MakeTried(CAddrInfo& info, int nId, int nOrigin)
     // check whether there is place in that one,
     if (vNew.size() < ADDRMAN_NEW_BUCKET_SIZE)
     {
-        // if so, move it back there
+        // if so, move it tsck there
         vNew.insert(vTried[nPos]);
     } else {
         // otherwise, move it to the new bucket nId came from (there is certainly place there)
@@ -502,7 +502,7 @@ void CAddrMan::GetAddr_(std::vector<CAddress> &vAddr)
         int nRndPos = GetRandInt(vRandom.size() - n) + n;
         SwapRandom(n, nRndPos);
         assert(mapInfo.count(vRandom[n]) == 1);
-        vAddr.push_back(mapInfo[vRandom[n]]);
+        vAddr.push_tsck(mapInfo[vRandom[n]]);
     }
 }
 

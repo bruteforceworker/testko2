@@ -740,7 +740,7 @@ xmm_scrypt_core_loop2:
 	subq	$1, %rcx
 	ja xmm_scrypt_core_loop2
 
-	# re-shuffle 1st block back
+	# re-shuffle 1st block tsck
 	movd	%xmm8, %eax
 	movd	%xmm9, %edx
 	movd	%xmm10, %ecx
@@ -786,7 +786,7 @@ xmm_scrypt_core_loop2:
 	movl	%ebx, 28(%rdi)
 	movl	%eax, 12(%rdi)
 
-	# re-shuffle 2nd block back
+	# re-shuffle 2nd block tsck
 	movd	%xmm12, %eax
 	movd	%xmm13, %edx
 	movd	%xmm14, %ecx

@@ -113,7 +113,7 @@ public:
 //      * Each address range selects at random 4 of these buckets.
 //      * The actual bucket is chosen from one of these, based on the full address.
 //      * When adding a new good address to a full bucket, a randomly chosen entry (with a bias favoring less recently
-//        tried ones) is evicted from it, back to the "new" buckets.
+//        tried ones) is evicted from it, tsck to the "new" buckets.
 //    * Bucket selection is based on cryptographic hashing, using a randomly-generated 256-bit key, which should not
 //      be observable by adversaries.
 //    * Several indexes are kept for high performance. Defining DEBUG_ADDRMAN will introduce frequent (and expensive)
@@ -212,7 +212,7 @@ protected:
 
     // Remove an element from a "new" bucket.
     // This is the only place where actual deletes occur.
-    // They are never deleted while in the "tried" table, only possibly evicted back to the "new" table.
+    // They are never deleted while in the "tried" table, only possibly evicted tsck to the "new" table.
     int ShrinkNew(int nUBucket);
 
     // Move an entry from the "new" table(s) to the "tried" table
@@ -330,7 +330,7 @@ public:
                     READWRITE(info);
                     am->mapAddr[info] = n;
                     info.nRandomPos = vRandom.size();
-                    am->vRandom.push_back(n);
+                    am->vRandom.push_tsck(n);
                     if (nUBuckets != ADDRMAN_NEW_BUCKET_COUNT)
                     {
                         am->vvNew[info.GetNewBucket(am->nKey)].insert(n);
@@ -348,10 +348,10 @@ public:
                     {
                         info.nRandomPos = vRandom.size();
                         info.fInTried = true;
-                        am->vRandom.push_back(am->nIdCount);
+                        am->vRandom.push_tsck(am->nIdCount);
                         am->mapInfo[am->nIdCount] = info;
                         am->mapAddr[info] = am->nIdCount;
-                        vTried.push_back(am->nIdCount);
+                        vTried.push_tsck(am->nIdCount);
                         am->nIdCount++;
                     } else {
                         nLost++;

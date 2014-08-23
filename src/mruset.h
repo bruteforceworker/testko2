@@ -43,7 +43,7 @@ public:
                 set.erase(queue.front());
                 queue.pop_front();
             }
-            queue.push_back(x);
+            queue.push_tsck(x);
         }
         return ret;
     }

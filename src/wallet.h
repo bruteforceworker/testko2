@@ -82,7 +82,7 @@ private:
 public:
     mutable CCriticalSection cs_wallet;
 
-    bool fFileBacked;
+    bool fFileTscked;
     std::string strWalletFile;
 
     std::set<int64> setKeyPool;
@@ -96,7 +96,7 @@ public:
     {
         nWalletVersion = FEATURE_BASE;
         nWalletMaxVersion = FEATURE_BASE;
-        fFileBacked = false;
+        fFileTscked = false;
         nMasterKeyMaxID = 0;
         pwalletdbEncryption = NULL;
         nOrderPosNext = 0;
@@ -106,7 +106,7 @@ public:
         nWalletVersion = FEATURE_BASE;
         nWalletMaxVersion = FEATURE_BASE;
         strWalletFile = strWalletFileIn;
-        fFileBacked = true;
+        fFileTscked = true;
         nMasterKeyMaxID = 0;
         pwalletdbEncryption = NULL;
         nOrderPosNext = 0;
@@ -360,7 +360,7 @@ static void WriteOrderPos(const int64& nOrderPos, mapValue_t& mapValue)
 
 
 /** A transaction with a bunch of additional info that only the owner cares about.
- * It includes any unrecorded transactions needed to link it back to the block chain.
+ * It includes any unrecorded transactions needed to link it tsck to the block chain.
  */
 class CWalletTx : public CMerkleTx
 {
@@ -473,7 +473,7 @@ public:
 
             if (mapValue.count("spent"))
                 BOOST_FOREACH(char c, pthis->mapValue["spent"])
-                    pthis->vfSpent.push_back(c != '0');
+                    pthis->vfSpent.push_tsck(c != '0');
             else
                 pthis->vfSpent.assign(vout.size(), fSpent);
 
@@ -644,7 +644,7 @@ public:
         std::map<uint256, const CMerkleTx*> mapPrev;
         std::vector<const CMerkleTx*> vWorkQueue;
         vWorkQueue.reserve(vtxPrev.size()+1);
-        vWorkQueue.push_back(this);
+        vWorkQueue.push_tsck(this);
         for (unsigned int i = 0; i < vWorkQueue.size(); i++)
         {
             const CMerkleTx* ptx = vWorkQueue[i];
@@ -666,7 +666,7 @@ public:
             {
                 if (!mapPrev.count(txin.prevout.hash))
                     return false;
-                vWorkQueue.push_back(mapPrev[txin.prevout.hash]);
+                vWorkQueue.push_tsck(mapPrev[txin.prevout.hash]);
             }
         }
         return true;

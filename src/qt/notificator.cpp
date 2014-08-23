@@ -52,7 +52,7 @@ Notificator::Notificator(const QString &programName, QSystemTrayIcon *trayicon, 
     OSStatus status = LSGetApplicationForInfo(kLSUnknownType, kLSUnknownCreator, CFSTR("growlTicket"), kLSRolesAll, 0, &cfurl);
     if (status != kLSApplicationNotFoundErr) {
         CFBundleRef bundle = CFBundleCreate(0, cfurl);
-        if (CFStringCompare(CFBundleGetIdentifier(bundle), CFSTR("com.Growl.GrowlHelperApp"), kCFCompareCaseInsensitive | kCFCompareBackwards) == kCFCompareEqualTo) {
+        if (CFStringCompare(CFBundleGetIdentifier(bundle), CFSTR("com.Growl.GrowlHelperApp"), kCFCompareCaseInsensitive | kCFCompareTsckwards) == kCFCompareEqualTo) {
             if (CFStringHasSuffix(CFURLGetString(cfurl), CFSTR("/Growl.app/")))
                 mode = Growl13;
             else
@@ -294,7 +294,7 @@ void Notificator::notify(Class cls, const QString &title, const QString &text, c
     default:
         if(cls == Critical)
         {
-            // Fall back to old fashioned pop-up dialog if critical and no other notification available
+            // Fall tsck to old fashioned pop-up dialog if critical and no other notification available
             QMessageBox::critical(parent, title, text, QMessageBox::Ok, QMessageBox::Ok);
         }
         break;

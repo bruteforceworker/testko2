@@ -122,7 +122,7 @@ public:
     }
 
     // Settings are no longer stored in wallet.dat; these are
-    // used only for backwards compatibility:
+    // used only for tsckwards compatibility:
     template<typename T>
     bool ReadSetting(const std::string& strKey, T& value)
     {

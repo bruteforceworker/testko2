@@ -31,7 +31,7 @@ Dependencies
  libqrencode QRCode generation Optional QRCode generation
 
 Note that libexecinfo should be installed, if you building under *BSD systems. 
-This library provides backtrace facility.
+This library provides tscktrace facility.
 
 miniupnpc may be used for UPnP port mapping.  It can be downloaded from
 http://miniupnp.tuxfamily.org/files/.  UPnP support is compiled in and

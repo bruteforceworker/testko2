@@ -293,7 +293,7 @@ public:
         // SendMessages will filter it again for knowns that were added
         // after addresses were pushed.
         if (addr.IsValid() && !setAddrKnown.count(addr))
-            vAddrToSend.push_back(addr);
+            vAddrToSend.push_tsck(addr);
     }
 
 
@@ -310,7 +310,7 @@ public:
         {
             LOCK(cs_inventory);
             if (!setInventoryKnown.count(inv))
-                vInventoryToSend.push_back(inv);
+                vInventoryToSend.push_tsck(inv);
         }
     }
 
@@ -684,7 +684,7 @@ inline void RelayMessage<>(const CInv& inv, const CDataStream& ss)
 
         // Save original serialized message so newer versions are preserved
         mapRelay.insert(std::make_pair(inv, ss));
-        vRelayExpiration.push_back(std::make_pair(GetTime() + 15 * 60, inv));
+        vRelayExpiration.push_tsck(std::make_pair(GetTime() + 15 * 60, inv));
     }
 
     RelayInventory(inv);

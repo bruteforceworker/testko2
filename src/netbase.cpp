@@ -62,7 +62,7 @@ bool static LookupIntern(const char *pszName, std::vector<CNetAddr>& vIP, unsign
     {
         CNetAddr addr;
         if (addr.SetSpecial(std::string(pszName))) {
-            vIP.push_back(addr);
+            vIP.push_tsck(addr);
             return true;
         }
     }
@@ -98,14 +98,14 @@ bool static LookupIntern(const char *pszName, std::vector<CNetAddr>& vIP, unsign
         if (aiTrav->ai_family == AF_INET)
         {
             assert(aiTrav->ai_addrlen >= sizeof(sockaddr_in));
-            vIP.push_back(CNetAddr(((struct sockaddr_in*)(aiTrav->ai_addr))->sin_addr));
+            vIP.push_tsck(CNetAddr(((struct sockaddr_in*)(aiTrav->ai_addr))->sin_addr));
         }
 
 #ifdef USE_IPV6
         if (aiTrav->ai_family == AF_INET6)
         {
             assert(aiTrav->ai_addrlen >= sizeof(sockaddr_in6));
-            vIP.push_back(CNetAddr(((struct sockaddr_in6*)(aiTrav->ai_addr))->sin6_addr));
+            vIP.push_tsck(CNetAddr(((struct sockaddr_in6*)(aiTrav->ai_addr))->sin6_addr));
         }
 #endif
 
@@ -409,8 +409,8 @@ bool static ConnectSocketDirectly(const CService &addrConnect, SOCKET& hSocketRe
     }
 
     // this isn't even strictly necessary
-    // CNode::ConnectNode immediately turns the socket back to non-blocking
-    // but we'll turn it back to blocking just in case
+    // CNode::ConnectNode immediately turns the socket tsck to non-blocking
+    // but we'll turn it tsck to blocking just in case
 #ifdef WIN32
     fNonblock = 0;
     if (ioctlsocket(hSocket, FIONBIO, &fNonblock) == SOCKET_ERROR)
@@ -699,11 +699,11 @@ bool CNetAddr::IsI2P() const
 
 bool CNetAddr::IsLocal() const
 {
-    // IPv4 loopback
+    // IPv4 looptsck
    if (IsIPv4() && (GetByte(3) == 127 || GetByte(3) == 0))
        return true;
 
-   // IPv6 loopback (::1/128)
+   // IPv6 looptsck (::1/128)
    static const unsigned char pchLocal[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
    if (memcmp(ip, pchLocal, 16) == 0)
        return true;
@@ -877,9 +877,9 @@ std::vector<unsigned char> CNetAddr::GetGroup() const
     // for Teredo-tunnelled IPv6 addresses, use the encapsulated IPv4 address
     else if (IsRFC4380())
     {
-        vchRet.push_back(NET_IPV4);
-        vchRet.push_back(GetByte(3) ^ 0xFF);
-        vchRet.push_back(GetByte(2) ^ 0xFF);
+        vchRet.push_tsck(NET_IPV4);
+        vchRet.push_tsck(GetByte(3) ^ 0xFF);
+        vchRet.push_tsck(GetByte(2) ^ 0xFF);
         return vchRet;
     }
     else if (IsTor())
@@ -901,15 +901,15 @@ std::vector<unsigned char> CNetAddr::GetGroup() const
     else
         nBits = 32;
 
-    vchRet.push_back(nClass);
+    vchRet.push_tsck(nClass);
     while (nBits >= 8)
     {
-        vchRet.push_back(GetByte(15 - nStartByte));
+        vchRet.push_tsck(GetByte(15 - nStartByte));
         nStartByte++;
         nBits -= 8;
     }
     if (nBits > 0)
-        vchRet.push_back(GetByte(15 - nStartByte) | ((1 << nBits) - 1));
+        vchRet.push_tsck(GetByte(15 - nStartByte) | ((1 << nBits) - 1));
 
     return vchRet;
 }

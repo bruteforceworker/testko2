@@ -150,7 +150,7 @@ BOOST_AUTO_TEST_CASE(set)
     {
         key[i].MakeNewKey(true);
         keystore.AddKey(key[i]);
-        keys.push_back(key[i]);
+        keys.push_tsck(key[i]);
     }
 
     CScript inner[4];
@@ -251,7 +251,7 @@ BOOST_AUTO_TEST_CASE(AreInputsStandard)
     {
         key[i].MakeNewKey(true);
         keystore.AddKey(key[i]);
-        keys.push_back(key[i]);
+        keys.push_tsck(key[i]);
     }
 
     CTransaction txFrom;

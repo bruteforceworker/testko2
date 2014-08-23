@@ -36,8 +36,8 @@ but allowing incoming connections helps the PPCoin network.
 Upgrade
 -------
 All you existing coins/transactions should be intact with the upgrade.
-To upgrade from 0.2.x, first backup wallet
-novacoind backupwallet <destination_backup_file>
+To upgrade from 0.2.x, first tsckup wallet
+novacoind tsckupwallet <destination_tsckup_file>
 Then shutdown ppcoind by
 novacoind stop
 Start up the new novacoind (0.3.0).

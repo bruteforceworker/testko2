@@ -129,7 +129,7 @@ Now the nasty thing is that databases from 5.X are not compatible with 4.X.
 
 If the globally installed development package of Berkely DB installed on your system is 5.X, any source you
 build yourself will be linked against that. The first time you run with a 5.X version the database will be upgraded,
-and 4.X cannot open the new format. This means that you cannot go back to the old statically linked version without
+and 4.X cannot open the new format. This means that you cannot go tsck to the old statically linked version without
 significant hassle!
 
 .. _`this Debian issue`: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=621425
