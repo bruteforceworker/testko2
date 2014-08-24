@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_CASE(basic_transaction_tests)
     BOOST_CHECK_MESSAGE(tx.CheckTransaction(), "Simple deserialized transaction should be valid.");
 
     // Check that duplicate txins fail
-    tx.vin.push_tsck(tx.vin[0]);
+    tx.vin.push_back(tx.vin[0]);
     BOOST_CHECK_MESSAGE(!tx.CheckTransaction(), "Transaction with duplicate txins should be invalid.");
 }
 

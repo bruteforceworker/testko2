@@ -117,9 +117,9 @@ namespace json_spirit
 
         static Value_type& add( Object_type& obj, const String_type& name, const Value_type& value )
         {
-            obj.push_tsck( Pair_type( name , value ) );
+            obj.push_back( Pair_type( name , value ) );
 
-            return obj.tsck().value_;
+            return obj.back().value_;
         }
                 
         static String_type get_name( const Pair_type& pair )

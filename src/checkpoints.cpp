@@ -100,7 +100,7 @@ namespace Checkpoints
 
         if (pindexCheckpointRecv->nHeight <= pindexSyncCheckpoint->nHeight)
         {
-            // Received an older checkpoint, trace tsck from current checkpoint
+            // Received an older checkpoint, trace back from current checkpoint
             // to the same height of the received checkpoint to verify
             // that current checkpoint should be a descendant block
             CBlockIndex* pindex = pindexSyncCheckpoint;
@@ -116,7 +116,7 @@ namespace Checkpoints
         }
 
         // Received checkpoint should be a descendant block of the current
-        // checkpoint. Trace tsck to the same height of current checkpoint
+        // checkpoint. Trace back to the same height of current checkpoint
         // to verify.
         CBlockIndex* pindex = pindexCheckpointRecv;
         while (pindex->nHeight > pindexSyncCheckpoint->nHeight)
@@ -218,7 +218,7 @@ namespace Checkpoints
 
         if (nHeight > pindexSync->nHeight)
         {
-            // trace tsck to same height as sync-checkpoint
+            // trace back to same height as sync-checkpoint
             const CBlockIndex* pindex = pindexPrev;
             while (pindex->nHeight > pindexSync->nHeight)
                 if (!(pindex = pindex->pprev))

@@ -56,8 +56,8 @@ but allowing incoming connections helps the PPCoin network.
 Upgrade
 -------
 All you existing coins/transactions should be intact with the upgrade.
-To upgrade from 0.2, first tsckup wallet
-ppcoind tsckupwallet <destination_tsckup_file>
+To upgrade from 0.2, first backup wallet
+ppcoind backupwallet <destination_backup_file>
 Then shutdown ppcoind by
 ppcoind stop
 Start up the new ppcoind (0.2.2).

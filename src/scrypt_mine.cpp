@@ -24,7 +24,7 @@
  * SUCH DAMAGE.
  *
  * This file was originally written by Colin Percival as part of the Tarsnap
- * online tsckup system.
+ * online backup system.
  */
 
 #include <stdlib.h>

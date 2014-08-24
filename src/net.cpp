@@ -79,7 +79,7 @@ static CSemaphore *semOutbound = NULL;
 void AddOneShot(string strDest)
 {
     LOCK(cs_vOneShots);
-    vOneShots.push_tsck(strDest);
+    vOneShots.push_back(strDest);
 }
 
 unsigned short GetListenPort()
@@ -346,7 +346,7 @@ bool GetMyExternalIP2(const CService& addrConnect, const char* pszGet, const cha
     return error("GetMyExternalIP() : connection closed");
 }
 
-// We now get our external IP from the IRC server first and only use this as a tsckup
+// We now get our external IP from the IRC server first and only use this as a backup
 bool GetMyExternalIP(CNetAddr& ipRet)
 {
     CService addrConnect;
@@ -517,7 +517,7 @@ CNode* ConnectNode(CAddress addrConnect, const char *pszDest, int64 nTimeout)
 
         {
             LOCK(cs_vNodes);
-            vNodes.push_tsck(pnode);
+            vNodes.push_back(pnode);
         }
 
         pnode->nTimeConnected = GetTime();
@@ -693,7 +693,7 @@ void ThreadSocketHandler2(void* parg)
                     pnode->nReleaseTime = max(pnode->nReleaseTime, GetTime() + 15 * 60);
                     if (pnode->fNetworkNode || pnode->fInbound)
                         pnode->Release();
-                    vNodesDisconnected.push_tsck(pnode);
+                    vNodesDisconnected.push_back(pnode);
                 }
             }
 
@@ -850,7 +850,7 @@ void ThreadSocketHandler2(void* parg)
                 pnode->AddRef();
                 {
                     LOCK(cs_vNodes);
-                    vNodes.push_tsck(pnode);
+                    vNodes.push_back(pnode);
                 }
             }
         }
@@ -1195,7 +1195,7 @@ void ThreadDNSAddressSeed2(void* parg)
                         int nOneDay = 24*3600;
                         CAddress addr = CAddress(CService(ip, GetDefaultPort()));
                         addr.nTime = GetTime() - 3*nOneDay - GetRand(4*nOneDay); // use a random age between 3 and 7 days old
-                        vAdd.push_tsck(addr);
+                        vAdd.push_back(addr);
                         found++;
                     }
                 }
@@ -1380,7 +1380,7 @@ void ThreadOpenConnections2(void* parg)
                 memcpy(&ip, &pnSeed[i], sizeof(ip));
                 CAddress addr(CService(ip, GetDefaultPort()));
                 addr.nTime = GetTime()-GetRand(nOneWeek)-nOneWeek;
-                vAdd.push_tsck(addr);
+                vAdd.push_back(addr);
             }
             addrman.Add(vAdd, CNetAddr("127.0.0.1"));
         }
@@ -1492,7 +1492,7 @@ void ThreadOpenAddedConnections2(void* parg)
         vector<CService> vservNode(0);
         if(Lookup(strAddNode.c_str(), vservNode, GetDefaultPort(), fNameLookup, 0))
         {
-            vservAddressesToAdd.push_tsck(vservNode);
+            vservAddressesToAdd.push_back(vservNode);
             {
                 LOCK(cs_setservAddNodeAddresses);
                 BOOST_FOREACH(CService& serv, vservNode)
@@ -1757,7 +1757,7 @@ bool BindListenPort(const CService &addrBind, string& strError)
         return false;
     }
 
-    vhListenSocket.push_tsck(hListenSocket);
+    vhListenSocket.push_back(hListenSocket);
 
     if (addrBind.IsRoutable() && fDiscover)
         AddLocal(addrBind, LOCAL_BIND);
@@ -1882,11 +1882,11 @@ void StartNode(void* parg)
     if (!NewThread(ThreadDumpAddress, NULL))
         printf("Error; NewThread(ThreadDumpAddress) failed\n");
 
-    // ppcoin: mint proof-of-stake blocks in the tsckground
+    // ppcoin: mint proof-of-stake blocks in the background
     if (!NewThread(ThreadStakeMinter, pwalletMain))
         printf("Error: NewThread(ThreadStakeMinter) failed\n");
 
-    // Generate coins in the tsckground
+    // Generate coins in the background
     GenerateBitcoins(GetBoolArg("-gen", false), pwalletMain);
 }
 

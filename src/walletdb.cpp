@@ -102,7 +102,7 @@ void CWalletDB::ListAccountCreditDebit(const string& strAccount, list<CAccountin
 
         ssValue >> acentry;
         ssKey >> acentry.nEntryNo;
-        entries.push_tsck(acentry);
+        entries.push_back(acentry);
     }
 
     pcursor->close();
@@ -145,7 +145,7 @@ CWalletDB::ReorderTransactions(CWallet* pwallet)
         if (nOrderPos == -1)
         {
             nOrderPos = nOrderPosNext++;
-            nOrderPosOffsets.push_tsck(nOrderPos);
+            nOrderPosOffsets.push_back(nOrderPos);
 
             if (pacentry)
                 // Have to write accounting regardless, since we don't keep it in memory
@@ -166,7 +166,7 @@ CWalletDB::ReorderTransactions(CWallet* pwallet)
             if (!nOrderPosOff)
                 continue;
 
-            // Since we're changing the order, write it tsck
+            // Since we're changing the order, write it back
             if (pwtx)
             {
                 if (!WriteTx(pwtx->GetHash(), *pwtx))
@@ -229,7 +229,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
                     strErr = strprintf("LoadWallet() repairing tx ver=%d %s", wtx.fTimeReceivedIsTxTime, hash.ToString().c_str());
                     wtx.fTimeReceivedIsTxTime = 0;
                 }
-                vWalletUpgrade.push_tsck(hash);
+                vWalletUpgrade.push_back(hash);
             }
 
             if (wtx.nOrderPos == -1)

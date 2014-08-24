@@ -301,9 +301,9 @@ std::string HexStr(const T itbegin, const T itend, bool fSpaces=false)
     {
         unsigned char val = (unsigned char)(*it);
         if(fSpaces && it != itbegin)
-            rv.push_tsck(' ');
-        rv.push_tsck(hexmap[val>>4]);
-        rv.push_tsck(hexmap[val&15]);
+            rv.push_back(' ');
+        rv.push_back(hexmap[val>>4]);
+        rv.push_back(hexmap[val&15]);
     }
 
     return rv;
@@ -546,7 +546,7 @@ public:
         nSize(size)
     {
         vValues.reserve(size);
-        vValues.push_tsck(initial_value);
+        vValues.push_back(initial_value);
         vSorted = vValues;
     }
 
@@ -556,7 +556,7 @@ public:
         {
             vValues.erase(vValues.begin());
         }
-        vValues.push_tsck(value);
+        vValues.push_back(value);
 
         vSorted.resize(vValues.size());
         std::copy(vValues.begin(), vValues.end(), vSorted.begin());

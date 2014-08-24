@@ -197,7 +197,7 @@ bool CDBEnv::Salvage(std::string strFile, bool fAggressive,
         if (keyHex != "DATA_END")
         {
             getline(strDump, valueHex);
-            vResult.push_tsck(make_pair(ParseHex(keyHex),ParseHex(valueHex)));
+            vResult.push_back(make_pair(ParseHex(keyHex),ParseHex(valueHex)));
         }
     }
 
@@ -245,7 +245,7 @@ CDB::CDB(const char *pszFile, const char* pszMode) :
                 DbMpoolFile*mpf = pdb->get_mpf();
                 ret = mpf->set_flags(DB_MPOOL_NOFILE, 1);
                 if (ret != 0)
-                    throw runtime_error(strprintf("CDB() : failed to configure for no temp file tscking for database %s", pszFile));
+                    throw runtime_error(strprintf("CDB() : failed to configure for no temp file backing for database %s", pszFile));
             }
 
             ret = pdb->open(NULL,      // Txn pointer
@@ -626,7 +626,7 @@ bool CTxDB::LoadBlockIndex()
     BOOST_FOREACH(const PAIRTYPE(uint256, CBlockIndex*)& item, mapBlockIndex)
     {
         CBlockIndex* pindex = item.second;
-        vSortedByHeight.push_tsck(make_pair(pindex->nHeight, pindex));
+        vSortedByHeight.push_back(make_pair(pindex->nHeight, pindex));
     }
     sort(vSortedByHeight.begin(), vSortedByHeight.end());
     BOOST_FOREACH(const PAIRTYPE(int, CBlockIndex*)& item, vSortedByHeight)
@@ -779,8 +779,8 @@ bool CTxDB::LoadBlockIndex()
     }
     if (pindexFork && !fRequestShutdown)
     {
-        // Reorg tsck to the fork
-        printf("LoadBlockIndex() : *** moving best chain pointer tsck to block %d\n", pindexFork->nHeight);
+        // Reorg back to the fork
+        printf("LoadBlockIndex() : *** moving best chain pointer back to block %d\n", pindexFork->nHeight);
         CBlock block;
         if (!block.ReadFromDisk(pindexFork))
             return error("LoadBlockIndex() : block.ReadFromDisk failed");

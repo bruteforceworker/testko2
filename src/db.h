@@ -54,7 +54,7 @@ public:
 
     /*
      * Verify that database file strFile is OK. If it is not,
-     * call the calltsck to try to recover.
+     * call the callback to try to recover.
      * This must be called BEFORE strFile is opened.
      * Returns true if strFile is OK.
      */

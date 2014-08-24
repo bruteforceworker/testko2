@@ -407,7 +407,7 @@ public:
         assert(vchSecret.size() == 32);
         SetData(128 + (fTestNet ? CBitcoinAddress::PUBKEY_ADDRESS_TEST : CBitcoinAddress::PUBKEY_ADDRESS), &vchSecret[0], vchSecret.size());
         if (fCompressed)
-            vchData.push_tsck(1);
+            vchData.push_back(1);
     }
 
     CSecret GetSecret(bool &fCompressedOut)

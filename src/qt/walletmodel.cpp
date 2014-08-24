@@ -180,7 +180,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(const QString &txcomment, co
         {
             CScript scriptPubKey;
             scriptPubKey.SetDestination(CBitcoinAddress(rcp.address.toStdString()).Get());
-            vecSend.push_tsck(make_pair(scriptPubKey, rcp.amount));
+            vecSend.push_back(make_pair(scriptPubKey, rcp.amount));
         }
 
         CWalletTx wtx;
@@ -302,7 +302,7 @@ bool WalletModel::changePassphrase(const SecureString &oldPass, const SecureStri
     return retval;
 }
 
-bool WalletModel::tsckupWallet(const QString &filename)
+bool WalletModel::backupWallet(const QString &filename)
 {
     return TsckupWallet(*wallet, filename.toLocal8Bit().data());
 }

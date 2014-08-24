@@ -235,7 +235,7 @@ This product includes software developed by the OpenSSL Project for use in the O
     </message>
     <message>
         <location line="+15"/>
-        <source>IMPORTANT: Any previous tsckups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous tsckups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
+        <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2265,8 +2265,8 @@ Address: %4
     </message>
     <message>
         <location line="+23"/>
-        <source>Run in the tsckground as a daemon and accept commands</source>
-        <translation>Run in the tsckground as a daemon and accept commands</translation>
+        <source>Run in the background as a daemon and accept commands</source>
+        <translation>Run in the background as a daemon and accept commands</translation>
     </message>
     <message>
         <location line="+33"/>
@@ -2280,7 +2280,7 @@ Address: %4
     </message>
     <message>
         <location line="-53"/>
-        <source>An error occurred while setting up the RPC port %u for listening on IPv6, falling tsck to IPv4: %s</source>
+        <source>An error occurred while setting up the RPC port %u for listening on IPv6, falling back to IPv4: %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2315,8 +2315,8 @@ Address: %4
     </message>
     <message>
         <location line="+3"/>
-        <source>Warning: wallet.dat corrupt, data salvaged! Original wallet.dat saved as wallet.{timestamp}.bak in %s; if your balance or transactions are incorrect you should restore from a tsckup.</source>
-        <translation>Warning: wallet.dat corrupt, data salvaged! Original wallet.dat saved as wallet.{timestamp}.bak in %s; if your balance or transactions are incorrect you should restore from a tsckup.</translation>
+        <source>Warning: wallet.dat corrupt, data salvaged! Original wallet.dat saved as wallet.{timestamp}.bak in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
+        <translation>Warning: wallet.dat corrupt, data salvaged! Original wallet.dat saved as wallet.{timestamp}.bak in %s; if your balance or transactions are incorrect you should restore from a backup.</translation>
     </message>
     <message>
         <location line="+14"/>

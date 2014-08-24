@@ -65,11 +65,11 @@ BOOST_AUTO_TEST_CASE(CreateNewBlock_validity)
         pblock->nVersion = 1;
         pblock->nTime = pindexBest->GetMedianTimePast()+1;
         pblock->vtx[0].vin[0].scriptSig = CScript();
-        pblock->vtx[0].vin[0].scriptSig.push_tsck(blockinfo[i].extranonce);
-        pblock->vtx[0].vin[0].scriptSig.push_tsck(pindexBest->nHeight);
+        pblock->vtx[0].vin[0].scriptSig.push_back(blockinfo[i].extranonce);
+        pblock->vtx[0].vin[0].scriptSig.push_back(pindexBest->nHeight);
         pblock->vtx[0].vout[0].scriptPubKey = CScript();
         if (txFirst.size() < 2)
-            txFirst.push_tsck(new CTransaction(pblock->vtx[0]));
+            txFirst.push_back(new CTransaction(pblock->vtx[0]));
         pblock->hashMerkleRoot = pblock->BuildMerkleTree();
         pblock->nNonce = blockinfo[i].nonce;
         assert(ProcessBlock(NULL, pblock));

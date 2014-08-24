@@ -308,7 +308,7 @@ namespace json_spirit
             }
             else
             {
-                stack_.push_tsck( current_p_ );
+                stack_.push_back( current_p_ );
 
                 Array_or_obj new_array_or_obj;   // avoid copy by building new array or object in place
 
@@ -320,9 +320,9 @@ namespace json_spirit
         {
             if( current_p_ != &value_ )
             {
-                current_p_ = stack_.tsck();
+                current_p_ = stack_.back();
                 
-                stack_.pop_tsck();
+                stack_.pop_back();
             }    
         }
 
@@ -334,9 +334,9 @@ namespace json_spirit
             }
             else if( current_p_->type() == array_type )
             {
-                current_p_->get_array().push_tsck( value );
+                current_p_->get_array().push_back( value );
 
-                return &current_p_->get_array().tsck(); 
+                return &current_p_->get_array().back(); 
             }
             
             assert( current_p_->type() == obj_type );

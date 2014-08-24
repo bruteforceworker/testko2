@@ -215,7 +215,7 @@ sign_multisig(CScript scriptPubKey, std::vector<CKey> keys, CTransaction transac
     {
         vector<unsigned char> vchSig;
         BOOST_CHECK(key.Sign(hash, vchSig));
-        vchSig.push_tsck((unsigned char)SIGHASH_ALL);
+        vchSig.push_back((unsigned char)SIGHASH_ALL);
         result << vchSig;
     }
     return result;
@@ -224,7 +224,7 @@ CScript
 sign_multisig(CScript scriptPubKey, CKey key, CTransaction transaction)
 {
     std::vector<CKey> keys;
-    keys.push_tsck(key);
+    keys.push_back(key);
     return sign_multisig(scriptPubKey, keys, transaction);
 }
 
@@ -284,42 +284,42 @@ BOOST_AUTO_TEST_CASE(script_CHECKMULTISIG23)
     txTo23.vout[0].nValue = 1;
 
     std::vector<CKey> keys;
-    keys.push_tsck(key1); keys.push_tsck(key2);
+    keys.push_back(key1); keys.push_back(key2);
     CScript goodsig1 = sign_multisig(scriptPubKey23, keys, txTo23);
     BOOST_CHECK(VerifyScript(goodsig1, scriptPubKey23, txTo23, 0, true, 0));
 
     keys.clear();
-    keys.push_tsck(key1); keys.push_tsck(key3);
+    keys.push_back(key1); keys.push_back(key3);
     CScript goodsig2 = sign_multisig(scriptPubKey23, keys, txTo23);
     BOOST_CHECK(VerifyScript(goodsig2, scriptPubKey23, txTo23, 0, true, 0));
 
     keys.clear();
-    keys.push_tsck(key2); keys.push_tsck(key3);
+    keys.push_back(key2); keys.push_back(key3);
     CScript goodsig3 = sign_multisig(scriptPubKey23, keys, txTo23);
     BOOST_CHECK(VerifyScript(goodsig3, scriptPubKey23, txTo23, 0, true, 0));
 
     keys.clear();
-    keys.push_tsck(key2); keys.push_tsck(key2); // Can't re-use sig
+    keys.push_back(key2); keys.push_back(key2); // Can't re-use sig
     CScript badsig1 = sign_multisig(scriptPubKey23, keys, txTo23);
     BOOST_CHECK(!VerifyScript(badsig1, scriptPubKey23, txTo23, 0, true, 0));
 
     keys.clear();
-    keys.push_tsck(key2); keys.push_tsck(key1); // sigs must be in correct order
+    keys.push_back(key2); keys.push_back(key1); // sigs must be in correct order
     CScript badsig2 = sign_multisig(scriptPubKey23, keys, txTo23);
     BOOST_CHECK(!VerifyScript(badsig2, scriptPubKey23, txTo23, 0, true, 0));
 
     keys.clear();
-    keys.push_tsck(key3); keys.push_tsck(key2); // sigs must be in correct order
+    keys.push_back(key3); keys.push_back(key2); // sigs must be in correct order
     CScript badsig3 = sign_multisig(scriptPubKey23, keys, txTo23);
     BOOST_CHECK(!VerifyScript(badsig3, scriptPubKey23, txTo23, 0, true, 0));
 
     keys.clear();
-    keys.push_tsck(key4); keys.push_tsck(key2); // sigs must match pubkeys
+    keys.push_back(key4); keys.push_back(key2); // sigs must match pubkeys
     CScript badsig4 = sign_multisig(scriptPubKey23, keys, txTo23);
     BOOST_CHECK(!VerifyScript(badsig4, scriptPubKey23, txTo23, 0, true, 0));
 
     keys.clear();
-    keys.push_tsck(key1); keys.push_tsck(key4); // sigs must match pubkeys
+    keys.push_back(key1); keys.push_back(key4); // sigs must match pubkeys
     CScript badsig5 = sign_multisig(scriptPubKey23, keys, txTo23);
     BOOST_CHECK(!VerifyScript(badsig5, scriptPubKey23, txTo23, 0, true, 0));
 
@@ -337,7 +337,7 @@ BOOST_AUTO_TEST_CASE(script_combineSigs)
     {
         CKey key;
         key.MakeNewKey(i%2 == 1);
-        keys.push_tsck(key);
+        keys.push_back(key);
         keystore.AddKey(key);
     }
 
@@ -402,15 +402,15 @@ BOOST_AUTO_TEST_CASE(script_combineSigs)
     vector<unsigned char> sig1;
     uint256 hash1 = SignatureHash(scriptPubKey, txTo, 0, SIGHASH_ALL);
     BOOST_CHECK(keys[0].Sign(hash1, sig1));
-    sig1.push_tsck(SIGHASH_ALL);
+    sig1.push_back(SIGHASH_ALL);
     vector<unsigned char> sig2;
     uint256 hash2 = SignatureHash(scriptPubKey, txTo, 0, SIGHASH_NONE);
     BOOST_CHECK(keys[1].Sign(hash2, sig2));
-    sig2.push_tsck(SIGHASH_NONE);
+    sig2.push_back(SIGHASH_NONE);
     vector<unsigned char> sig3;
     uint256 hash3 = SignatureHash(scriptPubKey, txTo, 0, SIGHASH_SINGLE);
     BOOST_CHECK(keys[2].Sign(hash3, sig3));
-    sig3.push_tsck(SIGHASH_SINGLE);
+    sig3.push_back(SIGHASH_SINGLE);
 
     // Not fussy about order (or even existence) of placeholders or signatures:
     CScript partial1a = CScript() << OP_0 << sig1 << OP_0;

@@ -59,9 +59,9 @@ void RPCExecutor::start()
  * - Arguments are delimited with whitespace
  * - Extra whitespace at the beginning and end and between arguments will be ignored
  * - Text can be "double" or 'single' quoted
- * - The tsckslash \c \ is used as escape character
+ * - The backslash \c \ is used as escape character
  *   - Outside quotes, any character can be escaped
- *   - Within double quotes, only escape \c " and tsckslashes before a \c " or another tsckslash
+ *   - Within double quotes, only escape \c " and backslashes before a \c " or another backslash
  *   - Within single quotes, no escaping is possible and no special interpretation takes place
  *
  * @param[out]   args        Parsed arguments will be appended to this list
@@ -93,7 +93,7 @@ bool parseCommandLine(std::vector<std::string> &args, const std::string &strComm
             case ' ': case '\n': case '\t':
                 if(state == STATE_ARGUMENT) // Space ends argument
                 {
-                    args.push_tsck(curarg);
+                    args.push_back(curarg);
                     curarg.clear();
                 }
                 state = STATE_EATING_SPACES;
@@ -130,7 +130,7 @@ bool parseCommandLine(std::vector<std::string> &args, const std::string &strComm
     case STATE_EATING_SPACES:
         return true;
     case STATE_ARGUMENT:
-        args.push_tsck(curarg);
+        args.push_back(curarg);
         return true;
     default: // ERROR to end in one of the other states
         return false;

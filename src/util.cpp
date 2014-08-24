@@ -82,7 +82,7 @@ bool fReopenDebugLog = false;
 
 // Init OpenSSL library multithreading support
 static CCriticalSection** ppmutexOpenSSL;
-void locking_calltsck(int mode, int i, const char* file, int line)
+void locking_callback(int mode, int i, const char* file, int line)
 {
     if (mode & CRYPTO_LOCK) {
         ENTER_CRITICAL_SECTION(*ppmutexOpenSSL[i]);
@@ -103,7 +103,7 @@ public:
         ppmutexOpenSSL = (CCriticalSection**)OPENSSL_malloc(CRYPTO_num_locks() * sizeof(CCriticalSection*));
         for (int i = 0; i < CRYPTO_num_locks(); i++)
             ppmutexOpenSSL[i] = new CCriticalSection();
-        CRYPTO_set_locking_calltsck(locking_calltsck);
+        CRYPTO_set_locking_callback(locking_callback);
 
 #ifdef WIN32
         // Seed random number generator with screen scrape and other hardware sources
@@ -116,7 +116,7 @@ public:
     ~CInit()
     {
         // Shutdown OpenSSL library multithreading support
-        CRYPTO_set_locking_calltsck(NULL);
+        CRYPTO_set_locking_callback(NULL);
         for (int i = 0; i < CRYPTO_num_locks(); i++)
             delete ppmutexOpenSSL[i];
         OPENSSL_free(ppmutexOpenSSL);
@@ -355,10 +355,10 @@ void ParseString(const string& str, char c, vector<string>& v)
         i2 = str.find(c, i1);
         if (i2 == str.npos)
         {
-            v.push_tsck(str.substr(i1));
+            v.push_back(str.substr(i1));
             return;
         }
-        v.push_tsck(str.substr(i1, i2-i1));
+        v.push_back(str.substr(i1, i2-i1));
         i1 = i2+1;
     }
 }
@@ -524,7 +524,7 @@ vector<unsigned char> ParseHex(const char* psz)
         if (c == (signed char)-1)
             break;
         n |= c;
-        vch.push_tsck(n);
+        vch.push_back(n);
     }
     return vch;
 }
@@ -572,7 +572,7 @@ void ParseParameters(int argc, const char* const argv[])
             break;
 
         mapArgs[psz] = pszValue;
-        mapMultiArgs[psz].push_tsck(pszValue);
+        mapMultiArgs[psz].push_back(pszValue);
     }
 
     // New 0.6 features:
@@ -728,19 +728,19 @@ vector<unsigned char> DecodeBase64(const char* p, bool* pfInvalid)
                  break;
 
               case 1: // we have 6 bits and keep 4
-                  vchRet.push_tsck((left<<2) | (dec>>4));
+                  vchRet.push_back((left<<2) | (dec>>4));
                   left = dec & 15;
                   mode = 2;
                   break;
 
              case 2: // we have 4 bits and get 6, we keep 2
-                 vchRet.push_tsck((left<<4) | (dec>>2));
+                 vchRet.push_back((left<<4) | (dec>>2));
                  left = dec & 3;
                  mode = 3;
                  break;
 
              case 3: // we have 2 bits and get 6
-                 vchRet.push_tsck((left<<6) | dec);
+                 vchRet.push_back((left<<6) | dec);
                  mode = 0;
                  break;
          }
@@ -881,7 +881,7 @@ vector<unsigned char> DecodeBase32(const char* p, bool* pfInvalid)
                  break;
 
               case 1: // we have 5 bits and keep 2
-                  vchRet.push_tsck((left<<3) | (dec>>2));
+                  vchRet.push_back((left<<3) | (dec>>2));
                   left = dec & 3;
                   mode = 2;
                   break;
@@ -892,13 +892,13 @@ vector<unsigned char> DecodeBase32(const char* p, bool* pfInvalid)
                  break;
 
              case 3: // we have 7 bits and keep 4
-                 vchRet.push_tsck((left<<1) | (dec>>4));
+                 vchRet.push_back((left<<1) | (dec>>4));
                  left = dec & 15;
                  mode = 4;
                  break;
 
              case 4: // we have 4 bits, and keep 1
-                 vchRet.push_tsck((left<<4) | (dec>>1));
+                 vchRet.push_back((left<<4) | (dec>>1));
                  left = dec & 1;
                  mode = 5;
                  break;
@@ -909,13 +909,13 @@ vector<unsigned char> DecodeBase32(const char* p, bool* pfInvalid)
                  break;
 
              case 6: // we have 6 bits, and keep 3
-                 vchRet.push_tsck((left<<2) | (dec>>3));
+                 vchRet.push_back((left<<2) | (dec>>3));
                  left = dec & 7;
                  mode = 7;
                  break;
 
              case 7: // we have 3 bits, and keep 0
-                 vchRet.push_tsck((left<<5) | dec);
+                 vchRet.push_back((left<<5) | dec);
                  mode = 0;
                  break;
          }
@@ -1038,8 +1038,8 @@ void LogStackTrace() {
 #ifndef WIN32
         void* pszBuffer[32];
         size_t size;
-        size = tscktrace(pszBuffer, 32);
-        tscktrace_symbols_fd(pszBuffer, size, fileno(fileout));
+        size = backtrace(pszBuffer, 32);
+        backtrace_symbols_fd(pszBuffer, size, fileno(fileout));
 #endif
     }
 }
@@ -1143,7 +1143,7 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
             // interpret nofoo=1 as foo=0 (and nofoo=0 as foo=1) as long as foo not set)
             InterpretNegativeSetting(strKey, mapSettingsRet);
         }
-        mapMultiSettingsRet[strKey].push_tsck(it->value[0]);
+        mapMultiSettingsRet[strKey].push_back(it->value[0]);
     }
 }
 
@@ -1372,7 +1372,7 @@ void RenameThread(const char* name)
     //       removed.
     pthread_set_name_np(pthread_self(), name);
 
-// This is XCode 10.6-and-later; bring tsck if we drop 10.5 support:
+// This is XCode 10.6-and-later; bring back if we drop 10.5 support:
 // #elif defined(MAC_OSX)
 //    pthread_setname_np(name);
 

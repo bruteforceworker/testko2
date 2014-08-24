@@ -14,11 +14,11 @@ static Array
 createArgs(int nRequired, const char* address1=NULL, const char* address2=NULL)
 {
     Array result;
-    result.push_tsck(nRequired);
+    result.push_back(nRequired);
     Array addresses;
-    if (address1) addresses.push_tsck(address1);
-    if (address2) addresses.push_tsck(address2);
-    result.push_tsck(addresses);
+    if (address1) addresses.push_back(address1);
+    if (address2) addresses.push_back(address2);
+    result.push_back(addresses);
     return result;
 }
 

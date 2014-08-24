@@ -261,7 +261,7 @@ std::string HelpMessage()
         "  -server                " + _("Accept command line and JSON-RPC commands") + "\n" +
 #endif
 #if !defined(WIN32) && !defined(QT_GUI)
-        "  -daemon                " + _("Run in the tsckground as a daemon and accept commands") + "\n" +
+        "  -daemon                " + _("Run in the background as a daemon and accept commands") + "\n" +
 #endif
         "  -testnet               " + _("Use the test network") + "\n" +
         "  -debug                 " + _("Output extra debugging information. Implies all other -debug* options") + "\n" +
@@ -517,7 +517,7 @@ bool AppInit2()
             string msg = strprintf(_("Warning: wallet.dat corrupt, data salvaged!"
                                      " Original wallet.dat saved as wallet.{timestamp}.bak in %s; if"
                                      " your balance or transactions are incorrect you should"
-                                     " restore from a tsckup."), strDataDir.c_str());
+                                     " restore from a backup."), strDataDir.c_str());
             uiInterface.ThreadSafeMessageBox(msg, _("Testnicoin"), CClientUIInterface::OK | CClientUIInterface::ICON_EXCLAMATION | CClientUIInterface::MODAL);
         }
         if (r == CDBEnv::RECOVER_FAIL)

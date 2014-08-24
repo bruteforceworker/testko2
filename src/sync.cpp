@@ -81,7 +81,7 @@ static void push_lock(void* c, const CLockLocation& locklocation, bool fTry)
     if (fDebug) printf("Locking: %s\n", locklocation.ToString().c_str());
     dd_mutex.lock();
 
-    (*lockstack).push_tsck(std::make_pair(c, locklocation));
+    (*lockstack).push_back(std::make_pair(c, locklocation));
 
     if (!fTry) {
         BOOST_FOREACH(const PAIRTYPE(void*, CLockLocation)& i, (*lockstack)) {
@@ -111,7 +111,7 @@ static void pop_lock()
         printf("Unlocked: %s\n", locklocation.ToString().c_str());
     }
     dd_mutex.lock();
-    (*lockstack).pop_tsck();
+    (*lockstack).pop_back();
     dd_mutex.unlock();
 }
 

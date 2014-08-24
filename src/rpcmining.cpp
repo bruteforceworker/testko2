@@ -69,17 +69,17 @@ Value getmininginfo(const Array& params, bool fHelp)
             "Returns an object containing mining-related information.");
 
     Object obj;
-    obj.push_tsck(Pair("blocks",        (int)nBestHeight));
-    obj.push_tsck(Pair("currentblocksize",(uint64_t)nLastBlockSize));
-    obj.push_tsck(Pair("currentblocktx",(uint64_t)nLastBlockTx));
-    obj.push_tsck(Pair("difficulty",    (double)GetDifficulty()));
-    obj.push_tsck(Pair("errors",        GetWarnings("statusbar")));
-    obj.push_tsck(Pair("generate",      GetBoolArg("-gen")));
-    obj.push_tsck(Pair("genproclimit",  (int)GetArg("-genproclimit", -1)));
-    obj.push_tsck(Pair("hashespersec",  gethashespersec(params, false)));
-	obj.push_tsck(Pair("networkhashps", getnetworkhashps(params, false)));
-    obj.push_tsck(Pair("pooledtx",      (uint64_t)mempool.size()));
-    obj.push_tsck(Pair("testnet",       fTestNet));
+    obj.push_back(Pair("blocks",        (int)nBestHeight));
+    obj.push_back(Pair("currentblocksize",(uint64_t)nLastBlockSize));
+    obj.push_back(Pair("currentblocktx",(uint64_t)nLastBlockTx));
+    obj.push_back(Pair("difficulty",    (double)GetDifficulty()));
+    obj.push_back(Pair("errors",        GetWarnings("statusbar")));
+    obj.push_back(Pair("generate",      GetBoolArg("-gen")));
+    obj.push_back(Pair("genproclimit",  (int)GetArg("-genproclimit", -1)));
+    obj.push_back(Pair("hashespersec",  gethashespersec(params, false)));
+	obj.push_back(Pair("networkhashps", getnetworkhashps(params, false)));
+    obj.push_back(Pair("pooledtx",      (uint64_t)mempool.size()));
+    obj.push_back(Pair("testnet",       fTestNet));
     return obj;
 }
 
@@ -163,7 +163,7 @@ Value getworkex(const Array& params, bool fHelp)
             pblock = CreateNewBlock(pwalletMain);
             if (!pblock)
                 throw JSONRPCError(-7, "Out of memory");
-            vNewBlock.push_tsck(pblock);
+            vNewBlock.push_back(pblock);
         }
 
         // Update nTime
@@ -189,20 +189,20 @@ Value getworkex(const Array& params, bool fHelp)
         std::vector<uint256> merkle = pblock->GetMerkleBranch(0);
 
         Object result;
-        result.push_tsck(Pair("data",     HexStr(BEGIN(pdata), END(pdata))));
-        result.push_tsck(Pair("target",   HexStr(BEGIN(hashTarget), END(hashTarget))));
+        result.push_back(Pair("data",     HexStr(BEGIN(pdata), END(pdata))));
+        result.push_back(Pair("target",   HexStr(BEGIN(hashTarget), END(hashTarget))));
 
         CDataStream ssTx(SER_NETWORK, PROTOCOL_VERSION);
         ssTx << coinbaseTx;
-        result.push_tsck(Pair("coinbase", HexStr(ssTx.begin(), ssTx.end())));
+        result.push_back(Pair("coinbase", HexStr(ssTx.begin(), ssTx.end())));
 
         Array merkle_arr;
 
         BOOST_FOREACH(uint256 merkleh, merkle) {
-            merkle_arr.push_tsck(HexStr(BEGIN(merkleh), END(merkleh)));
+            merkle_arr.push_back(HexStr(BEGIN(merkleh), END(merkleh)));
         }
 
-        result.push_tsck(Pair("merkle", merkle_arr));
+        result.push_back(Pair("merkle", merkle_arr));
 
 
         return result;
@@ -302,7 +302,7 @@ Value getwork(const Array& params, bool fHelp)
             pblock = CreateNewBlock(pwalletMain);
             if (!pblock)
                 throw JSONRPCError(RPC_OUT_OF_MEMORY, "Out of memory");
-            vNewBlock.push_tsck(pblock);
+            vNewBlock.push_back(pblock);
 
             // Need to update only after we know CreateNewBlock succeeded
             pindexPrev = pindexPrevNew;
@@ -328,10 +328,10 @@ Value getwork(const Array& params, bool fHelp)
         uint256 hashTarget = CBigNum().SetCompact(pblock->nBits).getuint256();
 
         Object result;
-        result.push_tsck(Pair("midstate", HexStr(BEGIN(pmidstate), END(pmidstate)))); // deprecated
-        result.push_tsck(Pair("data",     HexStr(BEGIN(pdata), END(pdata))));
-        result.push_tsck(Pair("hash1",    HexStr(BEGIN(phash1), END(phash1)))); // deprecated
-        result.push_tsck(Pair("target",   HexStr(BEGIN(hashTarget), END(hashTarget))));
+        result.push_back(Pair("midstate", HexStr(BEGIN(pmidstate), END(pmidstate)))); // deprecated
+        result.push_back(Pair("data",     HexStr(BEGIN(pdata), END(pdata))));
+        result.push_back(Pair("hash1",    HexStr(BEGIN(phash1), END(phash1)))); // deprecated
+        result.push_back(Pair("target",   HexStr(BEGIN(hashTarget), END(hashTarget))));
         return result;
     }
     else
@@ -462,61 +462,61 @@ Value getblocktemplate(const Array& params, bool fHelp)
 
         CDataStream ssTx(SER_NETWORK, PROTOCOL_VERSION);
         ssTx << tx;
-        entry.push_tsck(Pair("data", HexStr(ssTx.begin(), ssTx.end())));
+        entry.push_back(Pair("data", HexStr(ssTx.begin(), ssTx.end())));
 
-        entry.push_tsck(Pair("hash", txHash.GetHex()));
+        entry.push_back(Pair("hash", txHash.GetHex()));
 
         MapPrevTx mapInputs;
         map<uint256, CTxIndex> mapUnused;
         bool fInvalid = false;
         if (tx.FetchInputs(txdb, mapUnused, false, false, mapInputs, fInvalid))
         {
-            entry.push_tsck(Pair("fee", (int64_t)(tx.GetValueIn(mapInputs) - tx.GetValueOut())));
+            entry.push_back(Pair("fee", (int64_t)(tx.GetValueIn(mapInputs) - tx.GetValueOut())));
 
             Array deps;
             BOOST_FOREACH (MapPrevTx::value_type& inp, mapInputs)
             {
                 if (setTxIndex.count(inp.first))
-                    deps.push_tsck(setTxIndex[inp.first]);
+                    deps.push_back(setTxIndex[inp.first]);
             }
-            entry.push_tsck(Pair("depends", deps));
+            entry.push_back(Pair("depends", deps));
 
             int64_t nSigOps = tx.GetLegacySigOpCount();
             nSigOps += tx.GetP2SHSigOpCount(mapInputs);
-            entry.push_tsck(Pair("sigops", nSigOps));
+            entry.push_back(Pair("sigops", nSigOps));
         }
 
-        transactions.push_tsck(entry);
+        transactions.push_back(entry);
     }
 
     Object aux;
-    aux.push_tsck(Pair("flags", HexStr(COINBASE_FLAGS.begin(), COINBASE_FLAGS.end())));
+    aux.push_back(Pair("flags", HexStr(COINBASE_FLAGS.begin(), COINBASE_FLAGS.end())));
 
     uint256 hashTarget = CBigNum().SetCompact(pblock->nBits).getuint256();
 
     static Array aMutable;
     if (aMutable.empty())
     {
-        aMutable.push_tsck("time");
-        aMutable.push_tsck("transactions");
-        aMutable.push_tsck("prevblock");
+        aMutable.push_back("time");
+        aMutable.push_back("transactions");
+        aMutable.push_back("prevblock");
     }
 
     Object result;
-    result.push_tsck(Pair("version", pblock->nVersion));
-    result.push_tsck(Pair("previousblockhash", pblock->hashPrevBlock.GetHex()));
-    result.push_tsck(Pair("transactions", transactions));
-    result.push_tsck(Pair("coinbaseaux", aux));
-    result.push_tsck(Pair("coinbasevalue", (int64_t)pblock->vtx[0].vout[0].nValue));
-    result.push_tsck(Pair("target", hashTarget.GetHex()));
-    result.push_tsck(Pair("mintime", (int64_t)pindexPrev->GetMedianTimePast()+1));
-    result.push_tsck(Pair("mutable", aMutable));
-    result.push_tsck(Pair("noncerange", "00000000ffffffff"));
-    result.push_tsck(Pair("sigoplimit", (int64_t)MAX_BLOCK_SIGOPS));
-    result.push_tsck(Pair("sizelimit", (int64_t)MAX_BLOCK_SIZE));
-    result.push_tsck(Pair("curtime", (int64_t)pblock->nTime));
-    result.push_tsck(Pair("bits", HexBits(pblock->nBits)));
-    result.push_tsck(Pair("height", (int64_t)(pindexPrev->nHeight+1)));
+    result.push_back(Pair("version", pblock->nVersion));
+    result.push_back(Pair("previousblockhash", pblock->hashPrevBlock.GetHex()));
+    result.push_back(Pair("transactions", transactions));
+    result.push_back(Pair("coinbaseaux", aux));
+    result.push_back(Pair("coinbasevalue", (int64_t)pblock->vtx[0].vout[0].nValue));
+    result.push_back(Pair("target", hashTarget.GetHex()));
+    result.push_back(Pair("mintime", (int64_t)pindexPrev->GetMedianTimePast()+1));
+    result.push_back(Pair("mutable", aMutable));
+    result.push_back(Pair("noncerange", "00000000ffffffff"));
+    result.push_back(Pair("sigoplimit", (int64_t)MAX_BLOCK_SIGOPS));
+    result.push_back(Pair("sizelimit", (int64_t)MAX_BLOCK_SIZE));
+    result.push_back(Pair("curtime", (int64_t)pblock->nTime));
+    result.push_back(Pair("bits", HexBits(pblock->nBits)));
+    result.push_back(Pair("height", (int64_t)(pindexPrev->nHeight+1)));
 
     return result;
 }
