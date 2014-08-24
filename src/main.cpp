@@ -2499,9 +2499,9 @@ bool LoadBlockIndex(bool fAllowNew)
         block.hashPrevBlock = 0;
         block.hashMerkleRoot = block.BuildMerkleTree();
         block.nVersion = 1;
-        block.nTime    = 1408809591;
+        block.nTime    = 1408896032;
         block.nBits    = bnProofOfWorkLimit.GetCompact();
-        block.nNonce   = 34570663;
+        block.nNonce   = 877425850; //0 tolk da prvic zgeneriram
 
         //calc GB
         if (false && (block.GetHash() != hashGenesisBlock)) {
@@ -2533,7 +2533,7 @@ bool LoadBlockIndex(bool fAllowNew)
         printf("block.nTime = %u \n", block.nTime);
         printf("block.nNonce = %u \n", block.nNonce);
 
-        assert(block.hashMerkleRoot == uint256("0x9a6b3b51f78465be314141a0b3460b85979526bf499ddb98f37cd577cd962515"));
+        assert(block.hashMerkleRoot == uint256("0xe9cfd858a793267d01c4386d5c2fee95c386cce64c7c0c0e36ffa3a0659295a9")); //zgenerirali smo prvi blok in tole prepisali
 		assert(block.GetHash() == (!fTestNet ? hashGenesisBlock : hashGenesisBlockTestNet));
 
         // Start new block file
