@@ -3486,8 +3486,8 @@ bool ProcessMessages(CNode* pfrom)
     CDataStream& vRecv = pfrom->vRecv;
     if (vRecv.empty())
         return true;
-    //if (fDebug)
-    //    printf("ProcessMessages(%u bytes)\n", vRecv.size());
+    if (fDebug)
+        printf("ProcessMessages(%u bytes)\n", vRecv.size());
 
     //
     // Message format
